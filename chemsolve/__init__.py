@@ -1,6 +1,6 @@
 import warnings
 
-warnings.filterwarnings("always")
+warnings.filterwarnings("ignore")
 
 from .element import Element, SpecialElement
 from .compound import Compound, FormulaCompound
