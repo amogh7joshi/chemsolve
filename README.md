@@ -20,7 +20,7 @@ pip install chemsolve
 if you want to install it directly from this repository:
 ```shell script
 git clone https://github.com/amogh7joshi/chemsolve.git
-cd ml
+cd chemsolve
 python setup.py install
 ```
 
