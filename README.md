@@ -28,6 +28,10 @@ Then execute:
 ```python
 # Install system requirements.
 python3 -m pip install -r requirements.txt 
+
+#Try it out
+cd tests
+python3 elementtest.py
 ```
 
 Chemsolve uses the chempy and periodictable libraries.
