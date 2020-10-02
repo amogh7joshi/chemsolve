@@ -1,5 +1,8 @@
 # Chemsolve
 
+[![PyPI version](https://badge.fury.io/py/chemsolve.svg)](https://badge.fury.io/py/chemsolve)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Chemsolve is a library for solving and practicing chemistry problems.
 It's made to have easy usability while still retaining a powerful engine
 with functionality allowing it to tackle more complicated problems. It was 
