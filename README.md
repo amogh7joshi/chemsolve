@@ -1,6 +1,7 @@
 # Chemsolve
 
 [![PyPI version](https://badge.fury.io/py/chemsolve.svg)](https://badge.fury.io/py/chemsolve)
+[![Downloads](https://pepy.tech/badge/chemsolve)](https://pepy.tech/project/chemsolve)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Travis (.com)](https://img.shields.io/travis/com/amogh7joshi/chemsolve)
 
