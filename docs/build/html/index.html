@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chemsolve &#8212; Chemsolve v1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="chemsolve">
+<h1>Chemsolve<a class="headerlink" href="#chemsolve" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://badge.fury.io/py/chemsolve"><img alt="PyPI version" src="https://badge.fury.io/py/chemsolve.svg" /></a> <a class="reference external" href="https://pepy.tech/project/chemsolve"><img alt="Downloads" src="https://pepy.tech/badge/chemsolve" /></a> <a class="reference external" href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a> <img alt="Travis (.com)" src="https://img.shields.io/travis/com/amogh7joshi/chemsolve" /></p>
+<p>Chemsolve is a library for solving and practicing chemistry problems.
+It’s made to have easy usability while still retaining a powerful engine
+with functionality allowing it to tackle more complicated problems. It
+was designed as a tool for lower-level chemistry and problem solving as
+opposed to a materials science or higher-level chemistry library.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Chemsolve currently runs on Python 3.6 or higher. You can install it
+from PyPi via pip:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install chemsolve
+</pre></div>
+</div>
+<p>if you want to install it directly from this repository:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/amogh7joshi/chemsolve.git
+<span class="nb">cd</span> chemsolve
+python setup.py install
+</pre></div>
+</div>
+<p>Then execute:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install system requirements.</span>
+python3 -m pip install -r requirements.txt
+
+<span class="c1"># Try it out</span>
+<span class="nb">cd</span> tests
+python3 elementtest.py
+</pre></div>
+</div>
+<p>Chemsolve uses the chempy and periodictable libraries.</p>
+<div class="section" id="using-chemsolve">
+<h3>Using Chemsolve<a class="headerlink" href="#using-chemsolve" title="Permalink to this headline">¶</a></h3>
+<p>Chemsolve relies heavily on class framework with classes representing
+chemical objects: elements, compounds, reactions.</p>
+<div class="figure align-default" id="id1">
+<img alt="Classes" src="https://raw.githubusercontent.com/amogh7joshi/chemsolve/master/images/objects.png" />
+<p class="caption"><span class="caption-text">Classes</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<p>Examples for all of the implemented structures can be found in
+<code class="docutils literal notranslate"><span class="pre">/examples</span></code>. In this example, we will use the Reaction class.</p>
+<p>Import the required module(s):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chemsolve</span> <span class="kn">import</span> <span class="n">Compound</span><span class="p">,</span> <span class="n">Reaction</span>
+</pre></div>
+</div>
+<p>Create the Necessary Object and its Object parameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compounds which will be reacted.</span>
+<span class="n">r1</span> <span class="o">=</span> <span class="n">Compound</span><span class="p">(</span><span class="s2">&quot;NH3&quot;</span><span class="p">,</span> <span class="n">grams</span> <span class="o">=</span> <span class="mf">5.00</span><span class="p">)</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">Compound</span><span class="p">(</span><span class="s2">&quot;O2&quot;</span><span class="p">,</span> <span class="n">grams</span> <span class="o">=</span> <span class="mf">3.46</span><span class="p">)</span>
+<span class="n">p1</span> <span class="o">=</span> <span class="n">Compound</span><span class="p">(</span><span class="s2">&quot;NO2&quot;</span><span class="p">)</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">Compound</span><span class="p">(</span><span class="s2">&quot;H2O&quot;</span><span class="p">)</span>
+<span class="n">reaction</span> <span class="o">=</span> <span class="n">Reaction</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="s2">&quot;--&gt;&quot;</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>From here, you can access the object’s attributes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">reaction</span><span class="o">.</span><span class="n">balanced_reaction</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reaction</span><span class="o">.</span><span class="n">limiting_reactant</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>For further reference, please visit ``/examples``.</em></p>
+</div>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>All code in this library is avaliable under the <a class="reference external" href="../blob/master/LICENSE">MIT
+License</a>.</p>
+</div>
+<div class="section" id="contributions">
+<h2>Contributions<a class="headerlink" href="#contributions" title="Permalink to this headline">¶</a></h2>
+<p>Contributions are always welcome, and feel free to contribute to the
+library. Please make sure to follow the pull request guidelines.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Chemsolve</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Amogh Joshi.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
