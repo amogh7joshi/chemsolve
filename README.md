@@ -31,7 +31,7 @@ Then execute:
 # Install system requirements.
 python3 -m pip install -r requirements.txt 
 
-#Try it out
+# Try it out
 cd tests
 python3 elementtest.py
 ```
@@ -41,7 +41,7 @@ Chemsolve uses the chempy and periodictable libraries.
 
 Chemsolve relies heavily on class framework with classes representing chemical objects: elements, compounds, reactions.
 
-![Classes | 50%](images/objects.png)
+![Classes](images/objects.png)
 
 ### Examples
 

@@ -202,8 +202,9 @@ class CombustionTrain(Reaction):
       for compound in args:
          try:
             compound.mass
-         except AttributeError:
+         except AttributeError as exception:
             print("You must provide the masses of CO2 and H2O acquired in the Compound definition.")
+            raise exception
          else:
             self.__product_store.append(compound)
             self.products.append(compound.__repr__())
