@@ -15,11 +15,13 @@ Installation
 Chemsolve currently runs on Python 3.6 or higher. You can install it
 from PyPi via pip:
 
-``pip install chemsolve``
+.. code:: shell
+
+    pip install chemsolve
 
 if you want to install it directly from this repository:
 
-.. code:: python
+.. code:: shell
 
     git clone https://github.com/amogh7joshi/chemsolve.git
     cd chemsolve
@@ -27,17 +29,19 @@ if you want to install it directly from this repository:
 
 Then execute:
 
-.. code:: python
+.. code:: shell
 
-    // Install system requirements.
+    # Install system requirements.
     python3 -m pip install -r requirements.txt
 
-    // Try it out
+    # Try it out
     cd tests
     python3 elementtest.py
 
-Chemsolve uses the chempy and periodictable libraries. ## Using
-Chemsolve
+Chemsolve uses the chempy and periodictable libraries.
+
+Using Chemsolve
+~~~~~~~~~~~~~~~
 
 Chemsolve relies heavily on class framework with classes representing
 chemical objects: elements, compounds, reactions.
@@ -46,6 +50,7 @@ chemical objects: elements, compounds, reactions.
    :alt: Classes
 
    Classes
+
 Examples
 ~~~~~~~~
 
