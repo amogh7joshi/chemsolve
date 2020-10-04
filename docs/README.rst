@@ -46,7 +46,7 @@ Using Chemsolve
 Chemsolve relies heavily on class framework with classes representing
 chemical objects: elements, compounds, reactions.
 
-.. figure:: images/objects.png
+.. figure:: https://raw.githubusercontent.com/amogh7joshi/chemsolve/master/images/objects.png
    :alt: Classes
 
    Classes

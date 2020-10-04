@@ -41,7 +41,7 @@ Chemsolve uses the chempy and periodictable libraries.
 
 Chemsolve relies heavily on class framework with classes representing chemical objects: elements, compounds, reactions.
 
-![Classes](images/objects.png)
+![Classes](https://raw.githubusercontent.com/amogh7joshi/chemsolve/master/images/objects.png)
 
 ### Examples
 
