@@ -23,7 +23,7 @@ copyright = '2020, Amogh Joshi'
 author = 'Amogh Joshi'
 
 # The full version, including alpha/beta/rc tags
-release = 'v1.0.0'
+release = 'v1.0.1'
 
 
 # -- General configuration ---------------------------------------------------
@@ -31,6 +31,8 @@ release = 'v1.0.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+master_doc = 'index'
+
 extensions = [
    "sphinx_rtd_theme",
    "sphinx.ext.autodoc",
