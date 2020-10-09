@@ -94,6 +94,8 @@ class Reaction:
       '''
       Private method. Returns ordered dictionaries containing the balanced reaction's reactants and products.
       '''
+      print(self.reactants)
+      print(self.products)
       return balance_stoichiometry({f for f in self.reactants}, {f for f in self.products})
 
    def balanced_display(self):
@@ -128,7 +130,7 @@ class Reaction:
                if count < len(e2):
                   tempstr += str("+ ")
 
-      # Original Code --> Utils/past_code
+      # Original Code --> utils/past_code
 
       return tempstr
 
@@ -181,21 +183,25 @@ class CombustionTrain(Reaction):
    Oxygen is automatically added and once calculated, the additional compound is also added.
    If the main compound is made up of O atoms in addition to C and H, then the parameter hydrocarbon
    must be set to False and the mass of oxygen added as a parameter.
+   ADDITIONAL INPUTS:
+   If the main compound is made up of another element as well, this class can be modified.
+   If there is another element as a product, then add an element class. If a compound, then a compound.
+   **You must enter the products in the order: CO2, H2O, <other element/compound>.
 
    The limiting reactant will always be assumed to be the non-oxygen reactant, as with most calculated
    combustion reaction.
 
    **This class only determines the reacting compound, so DO NOT use this class for a regular reaction.
    '''
-   def __init__(self, *args, hydrocarbon = True, sample_mass = 0.0, **kwargs):
+   def __init__(self, *args, hydrocarbon = True, othercompound = False, sample_mass = 0.0, **kwargs):
       # A lot of errors may arise, all need to be prevented.
       if hydrocarbon == False:
          if sample_mass == 0.0:
             raise AttributeError("You must provide the total mass of the product in order to determine the quantity of oxygen.")
          else:
             sample_mass = round(float(sample_mass), 4)
-      if len(args) > 2:
-         raise AttributeError("You only need to provide the CO2 and H2O compound classes.")
+      if len(kwargs) > 3:
+         raise ValueError("The CombustionTrain class currently doesn't support more than one additional compound.")
 
       self.__product_store = []
       self.products = []
@@ -203,61 +209,100 @@ class CombustionTrain(Reaction):
          try:
             compound.mass
          except AttributeError as exception:
-            print("You must provide the masses of CO2 and H2O acquired in the Compound definition.")
+            print("You must provide the masses of the compounds as acquired in the Compound definition.")
             raise exception
          else:
             self.__product_store.append(compound)
             self.products.append(compound.__repr__())
 
       if hydrocarbon == True:
-         self.main_reactant = Compound(self.determine_main_compound(sample_mass, hydrocarbon = hydrocarbon))
+         if othercompound == True:
+            self.main_reactant = Compound(self.determine_main_compound(
+               sample_mass, hydrocarbon = hydrocarbon, othercompound = True))
+         else:
+            self.main_reactant = Compound(self.determine_main_compound(sample_mass, hydrocarbon = hydrocarbon))
       if hydrocarbon == False:
          self.main_reactant = Compound(self.determine_main_compound(sample_mass, hydrocarbon = hydrocarbon), grams = sample_mass)
 
+      #TODO: Fix this again!
+      #---------------------
       # Make sure the products in the reaction goes in the order CO2, H2O.
-      if args[0].__repr__() == "H2O":
-         args[0], args[1] = args[1], args[0]
+      # if args[0].__repr__() == "H2O":
+         # args[0], args[1] = args[1], args[0]
 
-      super().__init__(self.main_reactant, Compound('O2'), "-->", args[0], args[1])
+      if len(args) == 2:
+         super().__init__(self.main_reactant, Compound('O2'), "-->", args[0], args[1])
+      elif len(args) == 3:
+         super().__init__(self.main_reactant, Compound('O2'), "-->", args[0], args[1], Compound(args[2].__repr__()))
       self.limiting_reactant = self.main_reactant
 
-
-   def determine_main_compound(self, sample_mass, hydrocarbon = True):
+   def determine_main_compound(self, sample_mass, hydrocarbon = True, othercompound = False):
       '''
       Determines the main compound in the combustion reaction.
       '''
       mole_val = []
       __hold = []
+      other = None
+      if hydrocarbon == False and othercompound == True:
+            raise ValueError("You cannot have a hydrocarbon that also contains another element.")
       for index, compound in enumerate(self.__product_store):
-         if compound.__repr__() != 'CO2' and compound.__repr__() != 'H2O':
-            raise TypeError("The CombustionTrain class only takes in CO2 and H2O as products.")
-         total = operator.truediv(compound.gram_amount, compound.mass)
+         if 'O' not in compound.__repr__() and not isinstance(compound, (Element, SpecialElement)):
+            raise TypeError("The CombustionTrain class only takes in oxide compounds.")
+         total = operator.mul(compound.gram_amount, compound.mass)
+         print(total)
          if compound.__repr__() == 'CO2':
             mole_val.append(total * compound.moles_in_compound('C'))
             __hold.append('C')
-         if compound.__repr__() == 'H2O':
+         elif compound.__repr__() == 'H2O':
             mole_val.append(total * compound.moles_in_compound('H'))
             __hold.append('H')
+         else:
+            if 'O' in compound.__repr__():
+               other = str(compound.__repr__()[0])
+               mole_val.append(total * compound.moles_in_compound(other))
+            else:
+               other = str(compound.__repr__())
+               mole_val.append(total * compound.mole_amount)
+            __hold.append(other)
+      #TODO: Update this area --> the correct order of compounds.
+      #-------------
+      # if __hold[0] == 'H':
+         # mole_val[0], mole_val[1] = mole_val[1], mole_val[0]
 
-      if __hold[0] == 'H':
-         mole_val[0], mole_val[1] = mole_val[1], mole_val[0]
+      print(mole_val)
 
       if hydrocarbon == True:
-         reactant = FormulaCompound(SpecialElement('C', moles = mole_val[0]), SpecialElement('H', moles = mole_val[1]))\
-                    .empirical.__repr__()
-         self.main_reactant = reactant
+         if other == None:
+            reactant = FormulaCompound(SpecialElement('C', moles = mole_val[0]), SpecialElement('H', moles = mole_val[1]))\
+                       .empirical.__repr__()
+            self.main_reactant = reactant
+         else:
+            reactant = FormulaCompound(SpecialElement('C', moles = mole_val[0]), SpecialElement('H', moles = mole_val[1]),
+                                       SpecialElement(other, moles = mole_val[2])).empirical.__repr__()
+            self.main_reactant = reactant
 
       if hydrocarbon == False:
          e1 = mole_val[0] * Element('C').mass
          e2 = mole_val[1] * Element('H').mass
-         e3 = sample_mass - e1 - e2
-         mole_val.append(operator.truediv(e3, Element('O').mass))
+         reactant = None
+         if other == None:
+            e3 = sample_mass - e1 - e2
+            mole_val.append(operator.truediv(e3, Element('O').mass))
 
-         reactant = FormulaCompound(SpecialElement('C', moles = mole_val[0]), SpecialElement('H', moles = mole_val[1]),
-                                    SpecialElement('O', moles = mole_val[2])).empirical.__repr__()
+            reactant = FormulaCompound(SpecialElement('C', moles = mole_val[0]), SpecialElement('H', moles = mole_val[1]),
+                                       SpecialElement('O', moles = mole_val[2])).empirical.__repr__()
+         else:
+            e3 = mole_val[2] * Element(other).mass
+            e4 = sample_mass - e1 - e2 - e3
+            mole_val.append(operator.truediv(e4, Element('O').mass))
+
+            reactant = FormulaCompound(SpecialElement('C', moles = mole_val[0]), SpecialElement('H', moles = mole_val[1]),
+                                       SpecialElement(other, moles = mole_val[2]), SpecialElement('O', moles = mole_val[3])).empirical.__repr__()
          self.main_reactant = reactant
 
       return self.main_reactant
+
+
 
 
 
