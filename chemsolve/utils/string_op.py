@@ -8,8 +8,10 @@ def split(string):
    '''
    return [char for char in string]
 
-def nums_in_string(string):
+def num_in_string(string):
    '''
-   Takes in a string, returns a list containing the numbers in the string.
+   Takes in a string, returns each of the numbers within the string.
    '''
-   return [char for char in string if isinstance(char, int)]
+   return [char for char in string if char.is_digit() == True]
+
+

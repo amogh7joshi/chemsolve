@@ -6,8 +6,6 @@ p1 = Compound("H10Si10O15")
 p2 = Compound("HCl")
 reaction = Reaction(r1, r2, "-->", p1, p2)
 print(reaction)
-
-
 print(reaction.balanced_reaction)
 print(reaction.coefficient_sum)
 print(reaction.reactants)
@@ -21,7 +19,7 @@ reaction = Reaction(r1, r2, "-->", p1, p2, lim_calc = True)
 print(reaction.balanced_reaction)
 print(reaction.limiting_reactant)
 
-from chemsolve import CombustionTrain
+from chemsolve import CombustionTrain, Element
 carbon_dioxide = Compound("CO2", grams = 38.196)
 water = Compound("H2O", grams = 18.752)
 combustion = CombustionTrain(carbon_dioxide, water)
@@ -29,6 +27,7 @@ print(combustion.main_reactant)
 print(combustion)
 print(combustion.balanced_reaction)
 print(combustion.limiting_reactant)
+print()
 
 carbon_dioxide(grams = 3.00)
 water(grams = 0.816)
@@ -37,3 +36,15 @@ print(combustion.main_reactant)
 print(combustion)
 print(combustion.balanced_reaction)
 print(combustion.limiting_reactant)
+
+carbon_dioxide(grams = 58.57)
+water(grams = 14.98)
+chlorine = Element("Cl", grams = 11.7947)
+combustion = CombustionTrain(carbon_dioxide, water, chlorine, hydrocarbon = False, othercompound = True, sample_mass = 40.010)
+print(combustion.main_reactant)
+
+carbon_dioxide(grams = 1.321)
+water(grams = 0.325)
+nitrogen = Element("N", grams = 0.0421)
+combustion = CombustionTrain(carbon_dioxide, water, nitrogen, hydrocarbon = False, othercompound = True, sample_mass = 0.487)
+print(combustion.main_reactant)
