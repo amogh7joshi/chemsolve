@@ -1,5 +1,4 @@
 numpy
 sympy
-pandas
 periodictable
 chempy

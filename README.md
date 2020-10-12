@@ -1,9 +1,10 @@
 # Chemsolve
 
-[![PyPI version](https://badge.fury.io/py/chemsolve.svg)](https://badge.fury.io/py/chemsolve)
+[![PyPI version](https://img.shields.io/pypi/v/chemsolve)](https://img.shields.io/pypi/v/chemsolve)
 [![Downloads](https://pepy.tech/badge/chemsolve)](https://pepy.tech/project/chemsolve)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Travis (.com)](https://img.shields.io/travis/com/amogh7joshi/chemsolve)
+[![Latest Commit](https://img.shields.io/github/last-commit/amogh7joshi/chemsolve)](https://img.shields.io/github/last-commit/amogh7joshi/chemsolve)
 
 Chemsolve is a library for solving and practicing chemistry problems.
 It's made to have easy usability while still retaining a powerful engine
@@ -27,7 +28,7 @@ python setup.py install
 ```
 
 Then execute:
-```python
+```shell script
 # Install system requirements.
 python3 -m pip install -r requirements.txt 
 
@@ -76,6 +77,11 @@ print(reaction.limiting_reactant)
 ## License
 
 All code in this library is avaliable under the [MIT License](../blob/master/LICENSE).
+
+## Issues
+
+If you notice an issues or bugs with the library, please feel free to create an issue. 
+Make sure to follow the issue guidelines.
 
 ## Contributions
 

@@ -94,8 +94,10 @@ class Reaction:
       '''
       Private method. Returns ordered dictionaries containing the balanced reaction's reactants and products.
       '''
-      print(self.reactants)
-      print(self.products)
+      #FIXME: Remove.
+
+      # print(self.reactants)
+      # print(self.products)
       return balance_stoichiometry({f for f in self.reactants}, {f for f in self.products})
 
    def balanced_display(self):
@@ -243,13 +245,17 @@ class CombustionTrain(Reaction):
       mole_val = []
       __hold = []
       other = None
+
+      #TODO: Add functionality for giving the other compound but not its mass, and having to calculate that.
+      #-------------------
+      # other_calc = False
+
       if hydrocarbon == False and othercompound == True:
             raise ValueError("You cannot have a hydrocarbon that also contains another element.")
       for index, compound in enumerate(self.__product_store):
          if 'O' not in compound.__repr__() and not isinstance(compound, (Element, SpecialElement)):
-            raise TypeError("The CombustionTrain class only takes in oxide compounds.")
-         total = operator.mul(compound.gram_amount, compound.mass)
-         print(total)
+            raise TypeError("The CombustionTrain class only takes in oxide compounds or elements.")
+         total = operator.__truediv__(compound.gram_amount, compound.mass)
          if compound.__repr__() == 'CO2':
             mole_val.append(total * compound.moles_in_compound('C'))
             __hold.append('C')
@@ -262,14 +268,8 @@ class CombustionTrain(Reaction):
                mole_val.append(total * compound.moles_in_compound(other))
             else:
                other = str(compound.__repr__())
-               mole_val.append(total * compound.mole_amount)
+               mole_val.append(compound.mole_amount)
             __hold.append(other)
-      #TODO: Update this area --> the correct order of compounds.
-      #-------------
-      # if __hold[0] == 'H':
-         # mole_val[0], mole_val[1] = mole_val[1], mole_val[0]
-
-      print(mole_val)
 
       if hydrocarbon == True:
          if other == None:
