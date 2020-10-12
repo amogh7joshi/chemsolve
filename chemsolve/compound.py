@@ -283,19 +283,17 @@ class FormulaCompound(Compound):
 
       return form
 
-
 class CarbonDioxide(Compound):
    '''
-   An extension of the Compound class for Carbon Dioxide. Provies an easier experience with the CombustionTrain class.
+   An extension of the Compound class for Carbon Dioxide, to be used in the CombustionTrain class.
    '''
    def __init__(self, **kwargs):
       super().__init__(compound = "CO2", **kwargs)
 
 class Water(Compound):
    '''
-   An extension of the Compound class for Water. Provides an easier experience with the CombustionTrain class.
+   An extension of the Compound class for Water, to be used in the CombustionTrain class/
    '''
    def __init__(self, **kwargs):
       super().__init__(compound = "H2O", **kwargs)
-
 
