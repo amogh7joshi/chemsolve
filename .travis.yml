@@ -11,3 +11,4 @@ script:
   - python3 elementtest.py
   - python3 compoundtest.py
   - python3 reactiontest.py
+  - python3 molartest.py
