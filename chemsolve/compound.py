@@ -41,8 +41,14 @@ class Compound:
          self.gram_amount = kwargs["grams"]
          self.mole_amount = round(operator.truediv(self.gram_amount, self.mass), 4)
 
+      if "volume" in kwargs:
+         #TODO: Moles from molarity.
+         self.volume = kwargs["volume"]
+
       if "moles" in kwargs and "grams" in kwargs:
-         raise Exception("You cannot provide both the number of moles and grams of the element at a single time.")
+         raise ValueError("You cannot provide both the number of moles and grams of the element at a single time.")
+      if "grams" in kwargs and "volume" in kwargs:
+         raise ValueError("You cannot provide both the volume and the gram value at the same time.")
 
    def __str__(self):
       return str(self.print_compound.unicode_name)
@@ -51,7 +57,8 @@ class Compound:
       return str(self.compound)
 
    def __getattr__(self, item):
-      print("The attribute " + str(item) + " does not exist within this class.")
+      if not item in ["mole_amount", "gram_amount", "volume"]:
+         print("The attribute " + str(item) + " does not exist within this class or has not been defined yet.")
 
    def __call__(self, **kwargs):
       if "moles" in kwargs:
@@ -62,8 +69,14 @@ class Compound:
          self.gram_amount = kwargs["grams"]
          self.mole_amount = round(operator.truediv(self.gram_amount, self.mass), 4)
 
+      if "volume" in kwargs:
+         #TODO: Moles from molarity.
+         self.volume = kwargs["volume"]
+
       if "moles" in kwargs and "grams" in kwargs:
          raise Exception("You cannot provide both the number of moles and grams of the element at a single time.")
+      if "grams" in kwargs and "volume" in kwargs:
+         raise ValueError("You cannot provide both the volume and the gram value at the same time.")
 
    '''
    Functions which gather attributes.
