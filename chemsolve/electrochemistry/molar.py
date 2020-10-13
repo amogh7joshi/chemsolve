@@ -1,6 +1,6 @@
 import operator
 
-from chemsolve.compound import Compound
+from ..compound import Compound
 
 def molarity(compound, setting = None, molarity = None, moles = None, volume = None):
    '''
@@ -41,3 +41,13 @@ def molarity(compound, setting = None, molarity = None, moles = None, volume = N
    if setting == "volume":
       return operator.__truediv__(moles, molarity)
    else: return None
+
+def base_molality(solute, solvent):
+   '''
+   For the most basic calculations involving molality --> takes in just the moles of solute and mass of solvent.
+   '''
+   return operator.__truediv__(solute, solvent)
+
+def molality():
+   #TODO: To be implemented.
+   pass

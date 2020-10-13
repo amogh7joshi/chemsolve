@@ -46,7 +46,11 @@ Chemsolve relies heavily on class framework with classes representing chemical o
 
 ### Examples
 
-Examples for all of the implemented structures can be found in `/examples`.
+Examples for all of the implemented structures can be found in `/examples`:
+1. The [Element Class](https://github.com/amogh7joshi/chemsolve/blob/master/examples/element_example.ipynb) and usage.
+2. The [Compound Class](https://github.com/amogh7joshi/chemsolve/blob/master/examples/compound_example.ipynb) and usage.
+3. The [Reaction Class](https://github.com/amogh7joshi/chemsolve/blob/master/examples/reaction_example.ipynb) and usage. 
+
 In this example, we will use the Reaction class.
 
 Import the required module(s):
