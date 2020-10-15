@@ -12,6 +12,7 @@ from math import floor, ceil
 from chemsolve.element import Element
 from chemsolve.element import SpecialElement
 from chemsolve.utils.string_op import split
+from chemsolve.utils.constants import *
 
 try:
    import periodictable as pt
@@ -36,10 +37,17 @@ class Compound:
       if "moles" in kwargs:
          self.mole_amount = kwargs["moles"]
          self.gram_amount = round(operator.mul(self.mole_amount, self.mass), 4)
+         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
 
       if "grams" in kwargs:
          self.gram_amount = kwargs["grams"]
          self.mole_amount = round(operator.truediv(self.gram_amount, self.mass), 4)
+         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
+
+      if "molecules" in kwargs:
+         self.molecules = kwargs["molecules"]
+         self.mole_amount = round(operator.__truediv__(self.molecules, AVOGADRO), 4)
+         self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
 
       if "volume" in kwargs:
          #TODO: Moles from molarity.
@@ -64,17 +72,24 @@ class Compound:
       if "moles" in kwargs:
          self.mole_amount = kwargs["moles"]
          self.gram_amount = round(operator.mul(self.mole_amount, self.mass), 4)
+         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
 
       if "grams" in kwargs:
          self.gram_amount = kwargs["grams"]
          self.mole_amount = round(operator.truediv(self.gram_amount, self.mass), 4)
+         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
+
+      if "molecules" in kwargs:
+         self.molecules = kwargs["molecules"]
+         self.mole_amount = round(operator.__truediv__(self.molecules, AVOGADRO), 4)
+         self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
 
       if "volume" in kwargs:
-         #TODO: Moles from molarity.
+         # TODO: Moles from molarity.
          self.volume = kwargs["volume"]
 
       if "moles" in kwargs and "grams" in kwargs:
-         raise Exception("You cannot provide both the number of moles and grams of the element at a single time.")
+         raise ValueError("You cannot provide both the number of moles and grams of the element at a single time.")
       if "grams" in kwargs and "volume" in kwargs:
          raise ValueError("You cannot provide both the volume and the gram value at the same time.")
 

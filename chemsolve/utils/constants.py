@@ -5,7 +5,7 @@ Any prevalent constants in chemistry.
 # BASIC
 
 # Avogadro's Constant
-AVOGADRO = 6.022e23
+AVOGADRO = 6.02214e23
 # Elementary Charge
 C = 1.60e-19
 # Atomic Mass Unit

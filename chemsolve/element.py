@@ -5,6 +5,8 @@ from pprint import pprint
 import pandas as pd
 import numpy as np
 
+from chemsolve.utils.constants import *
+
 try:
    import periodictable as pt
 except ModuleNotFoundError:
@@ -32,13 +34,20 @@ class Element:
       if "moles" in kwargs:
          self.mole_amount = kwargs["moles"]
          self.gram_amount = round(operator.mul(self.mole_amount, self.mass), 4)
+         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
 
       if "grams" in kwargs:
          self.gram_amount = kwargs["grams"]
          self.mole_amount = round(operator.truediv(self.gram_amount, self.mass), 4)
+         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
 
-      if "moles" in kwargs and "grams" in kwargs:
-         raise Exception("You cannot provide both the number of moles and grams of the element at a single time.")
+      if "molecules" in kwargs:
+         self.molecules = kwargs["molecules"]
+         self.mole_amount = round(operator.__truediv__(self.molecules, AVOGADRO), 4)
+         self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
+
+      if all(x in ["moles", "grams", "kwargs"] for x in [kwargs]):
+         raise Exception("You cannot provide multiple quantities of the element at a single time.")
 
    def __str__(self):
       return str(self.element_name.title())
@@ -54,13 +63,20 @@ class Element:
       if "moles" in kwargs:
          self.mole_amount = kwargs["moles"]
          self.gram_amount = round(operator.mul(self.mole_amount, self.mass), 4)
+         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
 
       if "grams" in kwargs:
          self.gram_amount = kwargs["grams"]
          self.mole_amount = round(operator.truediv(self.gram_amount, self.mass), 4)
+         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
 
-      if "moles" in kwargs and "grams" in kwargs:
-         raise TypeError("You cannot provide both the number of moles and grams of the element at a single time.")
+      if "molecules" in kwargs:
+         self.molecules = kwargs["molecules"]
+         self.mole_amount = round(operator.__truediv__(self.molecules, AVOGADRO), 4)
+         self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
+
+      if all(x in ["moles", "grams", "kwargs"] for x in [kwargs]):
+         raise Exception("You cannot provide multiple quantities of the element at a single time.")
 
    '''
    Functions which gather attributes.
