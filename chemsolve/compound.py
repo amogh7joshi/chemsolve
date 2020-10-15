@@ -11,8 +11,11 @@ from math import floor, ceil
 
 from chemsolve.element import Element
 from chemsolve.element import SpecialElement
+from chemsolve.utils.from_formula import determine_empirical_coef
+from chemsolve.utils.from_formula import determine_empirical, determine_molecular
 from chemsolve.utils.string_op import split
 from chemsolve.utils.constants import *
+from chemsolve.utils.warnings import RemovalWarning
 
 try:
    import periodictable as pt
@@ -22,9 +25,10 @@ except ImportError:
    print("The module periodictable could not be found (may have not been installed).")
 
 
-class Compound:
-   def __init__(self, compound, *args, **kwargs):
-      self.compound = pt.formula(compound)
+class Compound(object):
+   def __init__(self, compound, mol_comp = None, *args, **kwargs):
+      if mol_comp: self.compound = mol_comp[0]; self.empirical = mol_comp[1]
+      else: self.compound = pt.formula(compound)
       self.mass = self.get_mass()
       self.compound_elements_list = self.__get_elements_in_compound_ions(compound)
       self.compound_elements = {}
@@ -94,8 +98,30 @@ class Compound:
          raise ValueError("You cannot provide both the volume and the gram value at the same time.")
 
    @classmethod
-   def fromFormula(cls): # To be implemented --> FormulaCompound as a classmethod.
-      pass
+   def fromFormula(cls, *args, molecular = False, **kwargs): # To be implemented --> FormulaCompound as a classmethod.
+      global molar_mass
+      compound_elements = []
+
+      if len(args) < 2:
+         raise ValueError(
+            "You may be using the wrong method, as fromFormula is used to determine compound formulas.")
+      for element in args:
+         if not isinstance(element, SpecialElement):
+            raise TypeError("The arguments of this class should only be SpecialElement classes.")
+         else:
+            compound_elements.append(element)
+
+      if "mass" in kwargs:
+         molar_mass = kwargs["mass"]
+
+      empirical_coef = determine_empirical_coef(compound_elements)
+      empirical = Compound(determine_empirical(compound_elements, empirical_coef))
+      empirical_mass = Compound(empirical.__repr__()).mass
+      if molecular == True:
+         molecular = determine_molecular(empirical_mass, compound_elements, molar_mass, empirical_coef, molecular=True)
+         return cls(compound = None, mol_comp = [molecular.__repr__(), empirical], grams = molar_mass)
+      else:
+         return cls(compound = empirical.__repr__())
 
    '''
    Functions which gather attributes.
@@ -174,7 +200,7 @@ class Compound:
       except AttributeError:
          print("That is not an element.")
 
-class FormulaCompound(Compound):
+class FormulaCompound(Compound): #TODO: Will be deprecated in a future version.
    '''
    Finds empirical, molecular, and other formulas of a compound.
 
@@ -187,6 +213,7 @@ class FormulaCompound(Compound):
    **Use the SpecialElement class to define elements which are going to be used to determine the compound.
    '''
    def __init__(self, *args, molecular = False, **kwargs):
+      RemovalWarning(future_version = "2.0.0")
       self.__compound_elements = []
 
       if len(args) < 2:

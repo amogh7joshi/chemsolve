@@ -5,8 +5,8 @@ from chemsolve.element import SpecialElement
 from chemsolve.compound import Compound
 from chemsolve.compound import FormulaCompound
 
-# Methods used by the former FormulaCompound class.
-# Returns the empirical/molecular formula of a compound based on the compounds in it.
+# Methods used by the former CombustionTrain class.
+# Returns the primary element in a combustion reaction..
 
 def determine_main_compound(product_store, sample_mass, hydrocarbon = True, othercompound = False):
    '''

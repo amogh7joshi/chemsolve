@@ -22,7 +22,7 @@ except ModuleNotFoundError:
 except ImportError:
    print("The module periodictable could not be found (may have not been installed).")
 
-class Reaction:
+class Reaction(object):
    '''
    Stores a balanced/unbalanced chemical reaction.
 
@@ -124,14 +124,14 @@ class Reaction:
       '''
       Returns the reactants of the reaction.
       '''
-      return self.reactants
+      return self._reactants
 
    @property
    def get_products(self):
       '''
       Returns the products of the reaction.
       '''
-      return self.products
+      return self._products
 
    def __balance(self):
       '''

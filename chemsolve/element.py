@@ -15,7 +15,7 @@ except ImportError:
    print("The module periodictable could not be found (may have not been installed).")
 
 
-class Element:
+class Element(object):
    '''
    A class which contains an element.
 
