@@ -78,6 +78,10 @@ class Compound:
       if "grams" in kwargs and "volume" in kwargs:
          raise ValueError("You cannot provide both the volume and the gram value at the same time.")
 
+   @classmethod
+   def fromFormula(cls): # To be implemented --> FormulaCompound as a classmethod.
+      pass
+
    '''
    Functions which gather attributes.
    '''
@@ -309,4 +313,3 @@ class Water(Compound):
    '''
    def __init__(self, **kwargs):
       super().__init__(compound = "H2O", **kwargs)
-

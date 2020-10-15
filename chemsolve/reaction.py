@@ -6,12 +6,12 @@ from pprint import pprint
 
 from chempy import Substance
 from chempy import balance_stoichiometry
-from chempy import Equilibrium
 
-from chemsolve.compound import Compound
-from chemsolve.compound import FormulaCompound
 from chemsolve.element import Element
 from chemsolve.element import SpecialElement
+from chemsolve.compound import Compound
+from chemsolve.compound import FormulaCompound
+from chemsolve.utils.combustion import determine_main_compound
 
 try:
    import periodictable as pt
@@ -34,7 +34,7 @@ class Reaction:
    If you want to use the calculation methods, you have to set the calculation booleans to True.
    Otherwise, it will force you to enter values for the moles/grams of each compound even if you don't have them.
    '''
-   def __init__(self, *args, lim_calc = False, **kwargs):
+   def __init__(self, *args, lim_calc = False, main_reactant = None, **kwargs):
       self.lim_calc = lim_calc
       self.reactants = []
       self.products = []
@@ -54,7 +54,7 @@ class Reaction:
             self.original_reaction += str(compound.__str__() + " ")
             if compound != args[-1] and not isinstance(args[args.index(compound) + 1], str):
                self.original_reaction += str("+ ")
-            if not isinstance(compound, Compound) and not isinstance(compound, FormulaCompound):
+            if not isinstance(compound, (Element, Compound)):
                raise TypeError("The object " + str(compound) + " is not of type Compound or related subclasses, please redefine it.")
             else: tempvar.append(compound.__repr__())
 
@@ -62,6 +62,9 @@ class Reaction:
       self.balanced_reaction = self.balanced_display()
       self.limiting_reactant = self.get_limiting_reactant(self.lim_calc)
       self.coefficient_sum = self.get_coefficient_sum()
+
+      if main_reactant: self.main_reactant = main_reactant
+
 
    def __str__(self):
       return self.original_reaction
@@ -72,6 +75,44 @@ class Reaction:
 
    def __getattr__(self, item):
       return "The attribute " + str(item) + " does not exist within this class."
+
+   @classmethod
+   def fromCombustion(cls, *args, hydrocarbon = True, othercompound = False, sample_mass = 0.0, **kwargs):
+      '''
+      An implementation of a class method representing a combustion reaction.
+      '''
+      global main_reactant
+
+      if hydrocarbon == False:
+         if sample_mass == 0.0:
+            raise AttributeError("You must provide the total mass of the product in order to determine the quantity of oxygen.")
+         else:
+            sample_mass = round(float(sample_mass), 4)
+      if len(kwargs) > 3:
+         raise ValueError("The CombustionTrain class currently doesn't support more than one additional compound.")
+
+      product_store = []
+      products = []
+      for compound in args:
+         try:
+            compound.mass
+         except AttributeError as exception:
+            print("You must provide the masses of the compounds as acquired in the Compound definition.")
+            raise exception
+         else:
+            product_store.append(compound)
+            products.append(compound.__repr__())
+
+      if hydrocarbon == True:
+         if othercompound == True:
+            main_reactant = Compound(determine_main_compound(product_store,
+               sample_mass, hydrocarbon = hydrocarbon, othercompound = True))
+         else:
+            main_reactant = Compound(determine_main_compound(product_store, sample_mass, hydrocarbon = hydrocarbon))
+      if hydrocarbon == False:
+         main_reactant = Compound(determine_main_compound(product_store, sample_mass, hydrocarbon = hydrocarbon), grams = sample_mass)
+
+      return cls(main_reactant, Compound("O2"), "-->", *product_store, main_reactant = main_reactant)
 
    '''
    Functions which gather attributes.
@@ -94,10 +135,6 @@ class Reaction:
       '''
       Private method. Returns ordered dictionaries containing the balanced reaction's reactants and products.
       '''
-      #FIXME: Remove.
-
-      # print(self.reactants)
-      # print(self.products)
       return balance_stoichiometry({f for f in self.reactants}, {f for f in self.products})
 
    def balanced_display(self):
@@ -172,7 +209,7 @@ class Reaction:
       else:
          return False
 
-class CombustionTrain(Reaction):
+class CombustionTrain(Reaction): #TODO: Will be deprecated in a future version.
    '''
    Determines an unknown compound in a combustion reaction.
 
@@ -225,12 +262,6 @@ class CombustionTrain(Reaction):
             self.main_reactant = Compound(self.determine_main_compound(sample_mass, hydrocarbon = hydrocarbon))
       if hydrocarbon == False:
          self.main_reactant = Compound(self.determine_main_compound(sample_mass, hydrocarbon = hydrocarbon), grams = sample_mass)
-
-      #TODO: Fix this again!
-      #---------------------
-      # Make sure the products in the reaction goes in the order CO2, H2O.
-      # if args[0].__repr__() == "H2O":
-         # args[0], args[1] = args[1], args[0]
 
       if len(args) == 2:
          super().__init__(self.main_reactant, Compound('O2'), "-->", args[0], args[1])
