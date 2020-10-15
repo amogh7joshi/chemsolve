@@ -42,9 +42,6 @@ chlorine = Element("Cl", grams = 11.7947)
 combustion = CombustionTrain(carbon_dioxide, water, chlorine, hydrocarbon = False, othercompound = True, sample_mass = 40.010)
 print(combustion.main_reactant)
 
-print()
-print()
-
 carbon_dioxide(grams = 1.321)
 water(grams = 0.325)
 nitrogen = Element("N", grams = 0.0421)
