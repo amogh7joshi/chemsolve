@@ -1,6 +1,7 @@
 import operator
 import re
 import sys
+import sympy
 
 from chempy import Substance
 from chempy import balance_stoichiometry
@@ -199,6 +200,22 @@ class Compound(object):
          print("That is not an element in this compound.")
       except AttributeError:
          print("That is not an element.")
+
+
+class SolutionCompound(Compound):
+   '''
+   Used as an implementation of the compound class for compounds in solutions.
+
+   In addition to the usual attributes, also accepts a charge and a state class.
+   '''
+   def __init__(self, compound, charge = 0, state = "aq"):
+      super().__init__(compound)
+      if charge not in range(-5, 6):
+         raise ValueError(f"The value for charge as initiated, {charge}, is too high or too low.")
+      self.charge = charge
+      if state not in ["aq", "s", "l", "g"]:
+         raise ValueError("The state of the compound must be either aqueous, solid, liquid, or gaseous.")
+      self.state = state
 
 class FormulaCompound(Compound): #TODO: Will be deprecated in a future version.
    '''
