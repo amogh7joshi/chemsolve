@@ -18,7 +18,7 @@ F = 96485.33289
 
 # GASES
 
-# Molar Gas
+# Molar Gas Constant
 R = 8.3144598
-# Boltzmann
+# Boltzmann's Constant
 K = 1.380649e-23

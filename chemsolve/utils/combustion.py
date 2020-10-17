@@ -39,13 +39,11 @@ def determine_main_compound(product_store, sample_mass, hydrocarbon = True, othe
 
    if hydrocarbon == True:
       if other == None:
-         reactant = Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1])) \
+         return Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1])) \
             .empirical.__repr__()
-         main_reactant = reactant
       else:
-         reactant = Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
+         return Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
                                     SpecialElement(other, moles=mole_val[2])).empirical.__repr__()
-         main_reactant = reactant
 
    if hydrocarbon == False:
       e1 = mole_val[0] * Element('C').mass
@@ -55,19 +53,17 @@ def determine_main_compound(product_store, sample_mass, hydrocarbon = True, othe
          e3 = sample_mass - e1 - e2
          mole_val.append(operator.truediv(e3, Element('O').mass))
 
-         reactant = Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
+         return Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
                                     SpecialElement('O', moles=mole_val[2])).empirical.__repr__()
       else:
          e3 = mole_val[2] * Element(other).mass
          e4 = sample_mass - e1 - e2 - e3
          mole_val.append(operator.truediv(e4, Element('O').mass))
 
-         reactant = Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
+         return Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
                                     SpecialElement(other, moles=mole_val[2]),
                                     SpecialElement('O', moles=mole_val[3])).empirical.__repr__()
-      main_reactant = reactant
-
-   return main_reactant
+   return None
 
 
 
