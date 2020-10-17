@@ -14,7 +14,6 @@ except ModuleNotFoundError:
 except ImportError:
    print("The module periodictable could not be found (may have not been installed).")
 
-
 class Element(object):
    '''
    A class which contains an element.
@@ -67,7 +66,7 @@ class Element(object):
 
       if "grams" in kwargs:
          self.gram_amount = kwargs["grams"]
-         self.mole_amount = round(operator.truediv(self.gram_amount, self.mass), 4)
+         self.mole_amount = round(operator.__truediv__(self.gram_amount, self.mass), 4)
          self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
 
       if "molecules" in kwargs:

@@ -61,9 +61,10 @@ def determine_main_compound(product_store, sample_mass, hydrocarbon = True, othe
          mole_val.append(operator.truediv(e4, Element('O').mass))
 
          return Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
-                                    SpecialElement(other, moles=mole_val[2]),
-                                    SpecialElement('O', moles=mole_val[3])).empirical.__repr__()
+                                     SpecialElement(other, moles=mole_val[2]),
+                                     SpecialElement('O', moles=mole_val[3])).empirical.__repr__()
    return None
+
 
 
 
