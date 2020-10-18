@@ -34,7 +34,7 @@ release = 'v1.0.1'
 master_doc = 'index'
 
 extensions = [
-   "nbsphinx",
+   'nbsphinx',
    "sphinx_rtd_theme",
    "sphinx.ext.autodoc",
    "sphinx.ext.viewcode",
