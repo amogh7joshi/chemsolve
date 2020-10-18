@@ -16,8 +16,6 @@ def determine_main_compound(product_store, sample_mass, hydrocarbon = True, othe
    __hold = []
    other = None
 
-   if hydrocarbon == False and othercompound == True:
-      raise ValueError("You cannot have a hydrocarbon that also contains another element.")
    for index, compound in enumerate(product_store):
       if 'O' not in compound.__repr__() and not isinstance(compound, (Element, SpecialElement)):
          raise TypeError("The CombustionTrain class only takes in oxide compounds or elements.")
@@ -39,11 +37,11 @@ def determine_main_compound(product_store, sample_mass, hydrocarbon = True, othe
 
    if hydrocarbon == True:
       if other == None:
-         return Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1])) \
-            .empirical.__repr__()
+         main_reactant =  Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1])) \
+            .store_comp
       else:
-         return Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
-                                    SpecialElement(other, moles=mole_val[2])).empirical.__repr__()
+         main_reactant = Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
+                                    SpecialElement(other, moles=mole_val[2])).store_comp
 
    if hydrocarbon == False:
       e1 = mole_val[0] * Element('C').mass
@@ -53,19 +51,18 @@ def determine_main_compound(product_store, sample_mass, hydrocarbon = True, othe
          e3 = sample_mass - e1 - e2
          mole_val.append(operator.truediv(e3, Element('O').mass))
 
-         return Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
-                                    SpecialElement('O', moles=mole_val[2])).empirical.__repr__()
+         main_reactant = Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
+                                    SpecialElement('O', moles=mole_val[2])).store_comp
       else:
          e3 = mole_val[2] * Element(other).mass
          e4 = sample_mass - e1 - e2 - e3
          mole_val.append(operator.truediv(e4, Element('O').mass))
 
-         return Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
+         main_reactant = Compound.fromFormula(SpecialElement('C', moles=mole_val[0]), SpecialElement('H', moles=mole_val[1]),
                                      SpecialElement(other, moles=mole_val[2]),
-                                     SpecialElement('O', moles=mole_val[3])).empirical.__repr__()
-   return None
+                                     SpecialElement('O', moles=mole_val[3])).store_comp
 
-
+      return main_reactant
 
 
 

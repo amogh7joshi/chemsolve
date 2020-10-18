@@ -35,6 +35,7 @@ class Compound(object):
       self.compound_elements = {}
       self.compound.elements = self.get_elements_in_compound()
       self.print_compound = Substance.from_formula(compound)
+      self.store_comp = compound
 
       '''
       The class can calculate quantities of moles and grams, depending on the specific keywords 'moles' and 'grams'.

@@ -67,7 +67,6 @@ class Reaction(object):
 
       if main_reactant: self.main_reactant = main_reactant
 
-
    def __str__(self):
       return self.original_reaction
 
@@ -108,13 +107,15 @@ class Reaction(object):
       if hydrocarbon == True:
          if othercompound == True:
             main_reactant = Compound(determine_main_compound(product_store,
-               sample_mass, hydrocarbon = hydrocarbon, othercompound = True))
+               sample_mass, hydrocarbon = hydrocarbon, othercompound = True)).__repr__()
          else:
-            main_reactant = Compound(determine_main_compound(product_store, sample_mass, hydrocarbon = hydrocarbon))
+            main_reactant = Compound(determine_main_compound(product_store, sample_mass, hydrocarbon = hydrocarbon))\
+                           .__repr__()
       if hydrocarbon == False:
-         main_reactant = Compound(determine_main_compound(product_store, sample_mass, hydrocarbon = hydrocarbon), grams = sample_mass)
+         main_reactant = Compound(determine_main_compound(product_store, sample_mass, hydrocarbon = hydrocarbon),
+                                  grams = sample_mass).__repr__()
 
-      return cls(main_reactant, Compound("O2"), "-->", *product_store, main_reactant = main_reactant)
+      return cls(Compound(main_reactant), Compound("O2"), "-->", *product_store, main_reactant = main_reactant)
 
    '''
    Functions which gather attributes.
