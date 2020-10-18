@@ -4,3 +4,5 @@ pandas
 periodictable
 chempy
 sphinx
+ipykernel
+nbsphinx
