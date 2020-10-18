@@ -3,7 +3,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/chemsolve)](https://img.shields.io/pypi/v/chemsolve)
 [![Downloads](https://pepy.tech/badge/chemsolve)](https://pepy.tech/project/chemsolve)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Travis (.com)](https://img.shields.io/travis/com/amogh7joshi/chemsolve)
+[![Travis (.com)](https://img.shields.io/travis/com/amogh7joshi/chemsolve)](https://travis-ci.org/github/amogh7joshi/chemsolve)
 [![Latest Commit](https://img.shields.io/github/last-commit/amogh7joshi/chemsolve)](https://img.shields.io/github/last-commit/amogh7joshi/chemsolve)
 
 Chemsolve is a library for solving and practicing chemistry problems.
