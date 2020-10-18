@@ -87,7 +87,8 @@ class Element(object):
       try:
          return getattr(pt, self.element_symbol.title()).name
       except AttributeError:
-         print("That is not an existing element in the periodic table.")
+         if ("+" or "-") in self.element_symbol:
+            print("That is not an existing element in the periodic table.")
 
    def get_mass(self):
       '''

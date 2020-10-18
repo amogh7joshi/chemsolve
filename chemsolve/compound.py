@@ -5,7 +5,6 @@ import sympy
 
 from chempy import Substance
 from chempy import balance_stoichiometry
-from chempy import Equilibrium
 
 from math import isclose
 from math import floor, ceil

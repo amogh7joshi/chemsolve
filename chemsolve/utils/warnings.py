@@ -18,3 +18,9 @@ def RemovalWarning(future_version = current_version):
    If a future version is not specified, then the current version is assumed.
    '''
    warnings.warn(("The feature you are using will be removed following v" + str(future_version) + "."), DeprecationWarning)
+
+def determine_presence(initial, determiner):
+   for item in initial:
+      if item not in determiner:
+         raise ValueError("A reactant must also be a product in a reaction.")
+
