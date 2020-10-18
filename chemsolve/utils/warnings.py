@@ -20,6 +20,10 @@ def RemovalWarning(future_version = current_version):
    warnings.warn(("The feature you are using will be removed following v" + str(future_version) + "."), DeprecationWarning)
 
 def determine_presence(initial, determiner):
+   '''
+   Determine if an item in one list is present in another list.
+   Used to confirm that a reactant is also present as a product.
+   '''
    for item in initial:
       if item not in determiner:
          raise ValueError("A reactant must also be a product in a reaction.")

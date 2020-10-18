@@ -49,6 +49,9 @@ def charge(compound):
    else: return [compound, 0]
 
 def compound_index_gather(main, choose): #TODO: May not work for double-digit subscripts.
+   '''
+   Adds to the initial indices from index_gather the indices of the subscript of an ignored substring.
+   '''
    indices = index_gather(main, choose)
    for index in indices:
       if (index + 1) < len(main):
@@ -59,6 +62,9 @@ def compound_index_gather(main, choose): #TODO: May not work for double-digit su
 # Master Functions
 
 def ignore(list, param = None, *args):
+   '''
+   Returns a string without certain substrings as determined by the parameter or arguments.
+   '''
    global choose, newlist
    newlist = []
    if param == None:
