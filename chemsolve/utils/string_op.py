@@ -1,8 +1,11 @@
+from __future__ import division
+
 import re
 import sys
 
-from .constants import REDOX
-from ..element import Element
+from chemsolve.utils.constants import REDOX
+from chemsolve.element import Element
+from chemsolve.compound import Compound
 
 '''
 A loose collection of functions which perform operations on strings.
@@ -59,6 +62,26 @@ def compound_index_gather(main, choose): #TODO: May not work for double-digit su
             indices.append(index + 1)
    return indices
 
+def charge_value(input):
+   '''
+   Returns the numerical value of the charge from the string.
+   '''
+   charges = {
+      "0": 0,
+      "+" or "+1" or "1+": 1,
+      "2+" or "+2": 2,
+      "3+" or "+3": 3,
+      "4+" or "+4": 4,
+      "5+" or "+5": 5,
+      "-" or "-1" or "1-": -1,
+      "2-" or "-2": -2,
+      "3-" or "-3": -3,
+      "4-" or "-4": -4,
+      "5-" or "-5": -5
+   }
+
+   return charges[input]
+
 # Master Functions
 
 def ignore(list, param = None, *args):
@@ -75,6 +98,27 @@ def ignore(list, param = None, *args):
       remove = compound_index_gather(item, choose)
       newlist.append(''.join(char for indx, char in enumerate(item) if indx not in remove))
    return newlist
+
+def oxidation_number(comp, charge):
+   rest_charge = 0
+   compound = Compound(comp)
+   preset = {
+      "O": -2,
+      "H": 1,
+      "F": -1,
+      "Na" or "K" or "Li" or "Rb" or "Cs": 1,
+      "Be" or "Mg" or "Ca" or "Sr" or "Ba": 2
+   }
+   main = ignore([comp], param = REDOX)
+   if main[0][-1].isdigit():
+      main[0] = main[0][:-1]
+   in_compound = compound.compound_elements
+   for element in in_compound:
+      try: rest_charge += preset[element] * in_compound[element]
+      except: pass
+   charge = charge_value(charge)
+   num = int((charge + rest_charge) / in_compound[main[0]])
+   return num
 
 
 

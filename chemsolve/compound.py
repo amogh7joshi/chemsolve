@@ -13,9 +13,10 @@ from chemsolve.element import Element
 from chemsolve.element import SpecialElement
 from chemsolve.utils.from_formula import determine_empirical_coef
 from chemsolve.utils.from_formula import determine_empirical, determine_molecular
-from chemsolve.utils.string_op import split
 from chemsolve.utils.constants import *
 from chemsolve.utils.warnings import RemovalWarning
+
+def split(string): return [char for char in string]
 
 try:
    import periodictable as pt
@@ -23,7 +24,6 @@ except ModuleNotFoundError:
    print("The module periodictable has not been installed.")
 except ImportError:
    print("The module periodictable could not be found (may have not been installed).")
-
 
 class Compound(object):
    def __init__(self, compound, mol_comp = None, *args, **kwargs):

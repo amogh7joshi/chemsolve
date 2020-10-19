@@ -4,10 +4,11 @@ import sys
 import numpy as np
 
 from chempy import Equilibrium
+from chempy.chemistry import Species
 
 from chemsolve.compound import Compound
 from chemsolve.reaction import Reaction
-from chemsolve.utils.string_op import charge
+from chemsolve.utils.string_op import charge, charge_value
 from chemsolve.utils.string_op import ignore
 from chemsolve.utils.warnings import assert_presence
 from chemsolve.utils.constants import *
@@ -29,10 +30,20 @@ class RedoxReaction(object):
       self.__main_reac = ignore(self.__main_reac, param = REDOX)
       self.__main_prod = ignore(self.__main_prod, param = REDOX)
       assert_presence(self.__main_reac, self.__main_prod)
+      self.oxidized, self.reduced = 2, 5
+      self.oxidation, self.reduction = 2, 5
+      self.electron_shift()
 
+   def electron_shift(self):
+      for key in self.reactants:
+         initial = charge_value(self.reactants[key])
+         final = charge_value(self.products[key])
+         if final > initial: pass
+            
 
-
-
+   def half_reactions(self):
+      for index, reactant in enumerate(self.reactants):
+         pass
 
 
 
