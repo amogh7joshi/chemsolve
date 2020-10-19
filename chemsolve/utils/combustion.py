@@ -5,7 +5,7 @@ from chemsolve.element import SpecialElement
 from chemsolve.compound import Compound
 
 # Methods used by the former CombustionTrain class.
-# Returns the primary element in a combustion reaction..
+# Returns the primary element in a combustion reaction.
 
 def determine_main_compound(product_store, sample_mass, hydrocarbon = True, othercompound = False):
    '''

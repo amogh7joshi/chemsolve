@@ -37,8 +37,7 @@ cd tests
 python3 elementtest.py
 ```
 
-Chemsolve uses the [chempy](https://github.com/bjodah/chempy) 
-and [periodictable](https://github.com/pkienzle/periodictable) libraries.
+Chemsolve uses the [chempy](https://github.com/bjodah/chempy) library.
 
 ## Using Chemsolve
 

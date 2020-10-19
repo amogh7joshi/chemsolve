@@ -1,18 +1,8 @@
 import operator
 from pprint import pprint
 
-# TODO: Add the periodic table as its own module.
-import pandas as pd
-import numpy as np
-
+from chemsolve.utils.periodictable import PeriodicTable
 from chemsolve.utils.constants import *
-
-try:
-   import periodictable as pt
-except ModuleNotFoundError:
-   print("The module periodictable has not been installed.")
-except ImportError:
-   print("The module periodictable could not be found (may have not been installed).")
 
 class Element(object):
    '''
@@ -22,6 +12,7 @@ class Element(object):
    A framework for extended element classes.
    '''
    def __init__(self, element_symbol, **kwargs):
+      self.__properties = PeriodicTable().get_properties(element_symbol)
       self.element_symbol = element_symbol
       self.element_name = self.get_element_name()
       self.mass = self.get_mass()
@@ -85,7 +76,7 @@ class Element(object):
       Returns the element name from the symbol.
       '''
       try:
-         return getattr(pt, self.element_symbol.title()).name
+         return self.__properties['Name']
       except AttributeError:
          if ("+" or "-") in self.element_symbol:
             print("That is not an existing element in the periodic table.")
@@ -94,13 +85,13 @@ class Element(object):
       '''
       Returns the atomic (and therefore molar) mass of the element.
       '''
-      return getattr(pt, self.element_symbol.title()).mass
+      return self.__properties['AtomicMass']
 
    def get_atomic_number(self):
       '''
       Returns the atomic number of the element.
       '''
-      return getattr(pt, self.element_symbol.title()).number
+      return self.__properties['AtomicNumber']
 
    '''
    Functions which perform calculations.
@@ -141,3 +132,5 @@ class SpecialElement(Element):
       else: self.percent_of = False
       if "moles" in kwargs:
          self.mole_amount = kwargs["moles"]; self.gram_amount = False; self.percent_of = False
+
+
