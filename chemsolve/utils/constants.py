@@ -25,3 +25,4 @@ K = 1.380649e-23
 
 # CONVENIENCE
 REDOX = "redox"
+BASEREDOX = "nredox"
