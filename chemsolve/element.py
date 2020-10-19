@@ -1,7 +1,6 @@
 import operator
-from pprint import pprint
 
-from chemsolve.utils.periodictable import PeriodicTable
+from chemsolve.periodictable import PeriodicTable
 from chemsolve.utils.constants import *
 
 class Element(object):

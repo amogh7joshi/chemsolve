@@ -1,5 +1,4 @@
 from chemsolve import Element
-import periodictable as pt
 
 oxygen = Element("O")
 print(oxygen.mass)
