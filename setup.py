@@ -9,7 +9,7 @@ with open(path.join(directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
    name = 'chemsolve',
-   version = '1.4.5',
+   version = '1.4.6',
    author = "Amogh Joshi",
    packages = find_packages(),
    author_email = "joshi.amoghn@gmail.com",

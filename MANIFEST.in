@@ -1,4 +1,4 @@
 include README.md
 include LICENSE
 
-include */assets/*.csv
+include chemsolve/utils/assets/*.csv
