@@ -28,7 +28,7 @@ except ImportError:
 class Compound(object):
    def __init__(self, compound, mol_comp = None, *args, **kwargs):
       if mol_comp: self.compound = mol_comp[0]; self.empirical = mol_comp[1]
-      else: self.compound = Substance(compound)
+      else: self.compound = pt.formula(compound)
       self.mass = self.get_mass()
       self.compound_elements_list = self.__get_elements_in_compound_ions(compound)
       self.compound_elements = {}
