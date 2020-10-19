@@ -1,6 +1,6 @@
 import operator
 
-from chemsolve.periodictable import PeriodicTable
+from chemsolve.utils.periodictable import PeriodicTable
 from chemsolve.utils.constants import *
 
 class Element(object):
