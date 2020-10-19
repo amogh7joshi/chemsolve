@@ -9,7 +9,7 @@ from chemsolve.compound import Compound
 from chemsolve.reaction import Reaction
 from chemsolve.utils.string_op import charge
 from chemsolve.utils.string_op import ignore
-from chemsolve.utils.warnings import determine_presence
+from chemsolve.utils.warnings import assert_presence
 from chemsolve.utils.constants import *
 
 class RedoxReaction(object):
@@ -28,7 +28,9 @@ class RedoxReaction(object):
 
       self.__main_reac = ignore(self.__main_reac, param = REDOX)
       self.__main_prod = ignore(self.__main_prod, param = REDOX)
-      determine_presence(self.__main_reac, self.__main_prod)
+      assert_presence(self.__main_reac, self.__main_prod)
+
+
 
 
 

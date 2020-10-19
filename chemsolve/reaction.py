@@ -13,7 +13,7 @@ from chemsolve.element import SpecialElement
 from chemsolve.compound import Compound
 from chemsolve.compound import FormulaCompound
 from chemsolve.utils.combustion import determine_main_compound
-from chemsolve.utils.warnings import determine_presence
+from chemsolve.utils.warnings import assert_presence
 from chemsolve.utils.warnings import RemovalWarning
 
 try:
@@ -44,7 +44,7 @@ class Reaction(object):
       self.original_reaction = ""
       self.__reactant_store = []
       self.__product_store = []
-      determine_presence(self.__reactant_store, self.__product_store)
+      assert_presence(self.__reactant_store, self.__product_store)
 
       tempvar = self.reactants
       tempvar2 = self.__reactant_store
