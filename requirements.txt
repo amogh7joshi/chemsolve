@@ -2,6 +2,7 @@ numpy
 sympy
 pandas
 chempy
+periodictable
 sphinx
 ipykernel
 nbsphinx
