@@ -3,8 +3,8 @@ import numpy as np
 import os
 
 directory, filename = os.path.split(__file__)
-directory = directory[:-6]
-PATH = os.path.join(directory, "/assets", "PT_complete.csv")
+print(directory)
+PATH = os.path.join(directory, "assets", "PT_complete.csv")
 
 class PeriodicTable(pd.DataFrame):
    def __init__(self):
