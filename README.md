@@ -37,7 +37,9 @@ cd tests
 python3 elementtest.py
 ```
 
-Chemsolve uses the chempy and periodictable libraries.
+Chemsolve uses the [chempy](https://github.com/bjodah/chempy) 
+and [periodictable](https://github.com/pkienzle/periodictable) libraries.
+
 ## Using Chemsolve
 
 Chemsolve relies heavily on class framework with classes representing chemical objects: elements, compounds, reactions.
