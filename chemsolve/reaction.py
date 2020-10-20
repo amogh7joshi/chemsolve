@@ -2,7 +2,6 @@ import operator
 import re
 import sys
 import sympy
-import warnings
 from pprint import pprint
 
 from chempy import Substance

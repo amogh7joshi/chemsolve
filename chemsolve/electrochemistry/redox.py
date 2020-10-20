@@ -1,8 +1,6 @@
 import re
 import sys
 
-import numpy as np
-
 from chempy import Equilibrium
 from chempy.chemistry import Species
 
