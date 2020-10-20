@@ -17,6 +17,7 @@ class Element(object):
       self.mass = self.get_mass()
       self.number = self.get_atomic_number()
       self.electron_configuration = self.get_electron_configuration()
+      self.full_electron_configuration = self.get_full_electron_configuration()
 
       '''
       The class can calculate quantities of moles and grams, depending on the specific keywords 'moles' and 'grams'.
@@ -98,6 +99,17 @@ class Element(object):
       Returns the electron configuration of the element.
       '''
       return self.__properties['ElectronConfiguration']
+
+   def get_full_electron_configuration(self):
+      '''
+      Returns the entire electron configuration of the element, ignoring the noble gas abbreviation.
+      '''
+      config = ""
+      if self.electron_configuration[0] == "[":
+         config = Element(self.electron_configuration[1:3]).full_electron_configuration + " "
+         config += self.electron_configuration[4:]
+         return config
+      else: return self.electron_configuration
 
    '''
    Functions which perform calculations.

@@ -21,7 +21,12 @@ F = 96485.33289
 # Molar Gas Constant
 R = 8.3144598
 # Boltzmann's Constant
-K = 1.380649e-23
+kB = 1.380649e-23
+
+# QUANTUM CHEMISTRY
+
+# Rydberg Constant
+rH = 2.17987e-18
 
 # CONVENIENCE
 REDOX = "redox"
