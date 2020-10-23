@@ -14,10 +14,14 @@ class Element(object):
       self.__properties = PeriodicTable().get_properties(element_symbol)
       self.element_symbol = element_symbol
       self.element_name = self.get_element_name()
-      self.mass = self.get_mass()
-      self.number = self.get_atomic_number()
-      self.electron_configuration = self.get_electron_configuration()
+      self.mass = self.__properties['AtomicMass']
+      self.number = self.__properties['AtomicNumber']
+      self.electron_configuration = self.__properties['ElectronConfiguration']
       self.full_electron_configuration = self.get_full_electron_configuration()
+      self.radius = self.__properties['AtomicRadius']
+      self.electronegativity = self.__properties['Electronegativity']
+      self.ionization = self.__properties['IonizationEnergy']
+      self.electron_affinity = self.__properties['Electron Affinity']
 
       '''
       The class can calculate quantities of moles and grams, depending on the specific keywords 'moles' and 'grams'.
@@ -81,24 +85,6 @@ class Element(object):
       except AttributeError:
          if ("+" or "-") in self.element_symbol:
             print("That is not an existing element in the periodic table.")
-
-   def get_mass(self):
-      '''
-      Returns the atomic (and therefore molar) mass of the element.
-      '''
-      return self.__properties['AtomicMass']
-
-   def get_atomic_number(self):
-      '''
-      Returns the atomic number of the element.
-      '''
-      return self.__properties['AtomicNumber']
-
-   def get_electron_configuration(self):
-      '''
-      Returns the electron configuration of the element.
-      '''
-      return self.__properties['ElectronConfiguration']
 
    def get_full_electron_configuration(self):
       '''
