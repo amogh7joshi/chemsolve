@@ -21,7 +21,7 @@ class Element(object):
       self.radius = self.__properties['AtomicRadius']
       self.electronegativity = self.__properties['Electronegativity']
       self.ionization = self.__properties['IonizationEnergy']
-      self.electron_affinity = self.__properties['Electron Affinity']
+      self.electron_affinity = self.__properties['ElectronAffinity']
 
       '''
       The class can calculate quantities of moles and grams, depending on the specific keywords 'moles' and 'grams'.
