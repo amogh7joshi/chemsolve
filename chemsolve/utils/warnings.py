@@ -28,3 +28,5 @@ def assert_presence(initial, determiner):
       if item not in determiner:
          raise ValueError("A reactant must also be a product in a reaction.")
 
+
+

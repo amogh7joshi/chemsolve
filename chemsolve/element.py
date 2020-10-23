@@ -67,7 +67,7 @@ class Element(object):
          self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
 
       if all(x in ["moles", "grams", "kwargs"] for x in [kwargs]):
-         raise Exception("You cannot provide multiple quantities of the element at a single time.")
+         raise ValueError("You cannot provide multiple quantities of the element at a single time.")
 
    '''
    Functions which gather attributes.

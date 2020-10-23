@@ -7,9 +7,11 @@ Any prevalent constants in chemistry.
 # Avogadro's Constant
 AVOGADRO = 6.02214e23
 # Elementary Charge
-C = 1.60e-19
+COULOMB = 1.60e-19
 # Atomic Mass Unit
 M = 1.66e-27
+# Speed of Light
+C = 2.997925e8
 
 # ELECTROCHEMISTRY
 
@@ -25,6 +27,8 @@ kB = 1.380649e-23
 
 # QUANTUM CHEMISTRY
 
+# Planck Constant
+h = 6.62607e-34
 # Rydberg Constant
 rH = 2.17987e-18
 
