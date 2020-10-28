@@ -32,6 +32,20 @@ h = 6.62607e-34
 # Rydberg Constant
 rH = 2.17987e-18
 
-# CONVENIENCE
+# LIBRARY CONSTANTS
+
+# Molecule VSEPR Structures
+STRUCTURES = [
+   "linear",
+   "bent",
+   "trigonal planar",
+   "trigonal pyramidal",
+   "trigonal bipyramidal",
+   "tetrahedral",
+   "octahedral",
+   "see-saw",
+]
+
+# Ignore Parameters
 REDOX = "redox"
 BASEREDOX = "nredox"

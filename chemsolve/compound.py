@@ -63,6 +63,12 @@ class Compound(object):
       if "grams" in kwargs and "volume" in kwargs:
          raise ValueError("You cannot provide both the volume and the gram value at the same time.")
 
+      if "structure" in kwargs:
+         if kwargs["structure"] in STRUCTURES:
+            self.structure = kwargs["structure"]
+         else:
+            raise ValueError("That is not an appropriate compound structure.")
+
    def __str__(self):
       return str(self.print_compound.unicode_name)
 
