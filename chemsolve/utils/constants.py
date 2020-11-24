@@ -22,6 +22,8 @@ F = 96485.33289
 
 # Molar Gas Constant
 R = 8.3144598
+# Molar Gas Constant for Atmospheres
+Ratm = 0.082057
 # Boltzmann's Constant
 kB = 1.380649e-23
 

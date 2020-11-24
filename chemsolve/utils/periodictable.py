@@ -1,6 +1,7 @@
+import os
+
 import pandas as pd
 import numpy as np
-import os
 
 directory, filename = os.path.split(__file__)
 PATH = os.path.join(directory, "assets", "PT_complete.csv")
