@@ -44,6 +44,7 @@ STRUCTURES = [
    "tetrahedral",
    "octahedral",
    "see-saw",
+   "t-shaped",
 ]
 
 # Ignore Parameters

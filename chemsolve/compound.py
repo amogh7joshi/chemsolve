@@ -371,6 +371,7 @@ class CarbonDioxide(Compound):
    '''
    def __init__(self, **kwargs):
       super().__init__(compound = "CO2", **kwargs)
+      self.geometry = "linear"
 
 class Water(Compound):
    '''
@@ -378,5 +379,6 @@ class Water(Compound):
    '''
    def __init__(self, **kwargs):
       super().__init__(compound = "H2O", **kwargs)
+      self.geometry = "bent"
 
 
