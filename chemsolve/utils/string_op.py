@@ -134,6 +134,15 @@ def oxidation_number(comp, charge, param = None):
    num = int((charge - rest_charge) / in_compound[main[0]])
    return num
 
+def num_in(nums, list):
+   '''
+   Whether the number of items in a list is as it should be.
+   '''
+   i = 0
+   for object in list:
+      if object: i+= 1
+   return (i == nums)
+
 
 
 
