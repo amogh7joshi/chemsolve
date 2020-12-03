@@ -52,3 +52,20 @@ STRUCTURES = [
 # Ignore Parameters
 REDOX = "redox"
 BASEREDOX = "nredox"
+
+# Units
+PRESSURE_UNITS = [
+   "torr",
+   "atm",
+   "mmhg",
+   "psi",
+   "pa",
+   "kpa",
+   "bar"
+]
+
+TEMP_UNITS = [
+   "f",
+   "c",
+   "k"
+]
