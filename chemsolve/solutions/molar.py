@@ -2,6 +2,8 @@ import operator
 
 from ..compound import Compound
 
+__all__ = ['molarity']
+
 def molarity(compound, setting = None, molarity = None, moles = None, volume = None):
    '''
    Calculations involving the molarity of a compound. Returns a value based on the setting.
@@ -48,6 +50,4 @@ def base_molality(solute, solvent):
    '''
    return operator.__truediv__(solute, solvent)
 
-def molality():
-   #TODO: To be implemented.
-   pass
+

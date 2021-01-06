@@ -3,6 +3,8 @@ import operator
 from chemsolve.utils.periodictable import PeriodicTable
 from chemsolve.utils.constants import *
 
+__all__ = ['Element', 'SpecialElement']
+
 class Element(object):
    '''
    A class which contains an element.

@@ -15,6 +15,8 @@ from chemsolve.utils.combustion import determine_main_compound
 from chemsolve.utils.warnings import assert_presence
 from chemsolve.utils.warnings import RemovalWarning
 
+__all__ = ['Reaction']
+
 try:
    import periodictable as pt
 except ModuleNotFoundError:

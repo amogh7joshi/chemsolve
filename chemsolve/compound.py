@@ -16,6 +16,8 @@ from chemsolve.utils.from_formula import determine_empirical, determine_molecula
 from chemsolve.utils.constants import *
 from chemsolve.utils.warnings import RemovalWarning
 
+__all__ = ['Compound', 'CarbonDioxide', 'Water']
+
 def split(string): return [char for char in string]
 
 try:
