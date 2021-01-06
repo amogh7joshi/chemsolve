@@ -4,6 +4,8 @@ Any prevalent constants in chemistry.
 
 # BASIC
 
+# Gravitational Constant
+G = 9.81
 # Avogadro's Constant
 AVOGADRO = 6.02214e23
 # Elementary Charge
