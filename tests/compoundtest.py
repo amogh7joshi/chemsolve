@@ -18,7 +18,7 @@ water = Compound("H2O")
 print(water.moles_in_compound("H"))
 print(water.percent_in_compound("O"))
 
-from chemsolve import SpecialElement, FormulaCompound
+from chemsolve import SpecialElement
 carbon = SpecialElement("C", percent = 0.5714)
 hydrogen = SpecialElement("H", percent = 0.0616)
 nitrogen = SpecialElement("N", percent = 0.0952)
