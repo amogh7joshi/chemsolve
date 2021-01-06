@@ -1,4 +1,5 @@
 from chemsolve import Compound
+from chemsolve.compound import FormulaCompound
 
 lead_nitrate = Compound("Pb(NO3)2")
 print(lead_nitrate.mass)

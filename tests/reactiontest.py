@@ -19,7 +19,8 @@ reaction = Reaction(r1, r2, "-->", p1, p2, lim_calc = True)
 print(reaction.balanced_reaction)
 print(reaction.limiting_reactant)
 
-from chemsolve import CombustionTrain, Element
+from chemsolve import Element
+from chemsolve.reaction import CombustionTrain
 carbon_dioxide = Compound("CO2", grams = 38.196)
 water = Compound("H2O", grams = 18.752)
 combustion = CombustionTrain(carbon_dioxide, water)
