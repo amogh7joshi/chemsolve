@@ -2,6 +2,8 @@
 **past/*
 **future/*
 **/test.py
+chemsolve/electrochemistry
+chemsolve/quantum
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
