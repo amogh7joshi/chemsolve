@@ -1,16 +1,31 @@
+#!/usr/bin/env python3
+# -*- coding = utf-8 -*-
 import warnings
 warnings.filterwarnings("ignore")
 import logging
 logging.basicConfig(format = '%(levelname)s - %(name)s: %(message)s')
 
+# Import general Chemsolve functionalities.
 from .element import *
 from .compound import *
-from .compound import *
 from .reaction import *
-
-# Removed Quantum for the time being.
-# from .quantum.photoelectric import energy_change, level_transition
 
 from .solutions.molar import molarity
 
 from .utils.constants import *
+
+# TO BE ADDED IN THE NEAR FUTURE
+# from .quantum.photoelectric import energy_change, level_transition
+
+# High-level methods.
+def list_valid_elements():
+   """Creates a list of valid elements."""
+   elements = []
+
+   from .utils.periodictable import PeriodicTable as _PeriodicTable
+   _table = _PeriodicTable()
+
+   for _element in _table['Name']:
+      elements.append(_element)
+
+   print(elements)
