@@ -138,29 +138,29 @@ class Reaction(object):
    def balanced_display(self):
       """Returns a displayable version of the balanced reaction."""
       tempstr = ""
-      e1 = list(self.__balanced[0].items())
+      e1 = list(self._balanced[0].items())
       count = 0
       for reactant in self.reactants:
          count += 1
-         for item in self.__balanced[0]:
+         for item in self._balanced[0]:
             if str(item) == str(reactant):
-               self.__balanced[0][item] = int(self.__balanced[0][item])
-               if not self.__balanced[0][item] == 1:
-                  tempstr += str(self.__balanced[0][item])
+               self._balanced[0][item] = int(self._balanced[0][item])
+               if not self._balanced[0][item] == 1:
+                  tempstr += str(self._balanced[0][item])
                tempstr += str(Compound(str(item)).__str__()) + str(" ")
                if count < len(e1):
                   tempstr += str("+ ")
       tempstr += str("--> ")
       #----
-      e2 = list(self.__balanced[1].items())
+      e2 = list(self._balanced[1].items())
       count = 0
       for product in self.products:
          count += 1
-         for item in self.__balanced[1]:
+         for item in self._balanced[1]:
             if str(item) == str(product):
-               self.__balanced[1][item] = int(self.__balanced[1][item])
-               if not self.__balanced[1][item] == 1:
-                  tempstr += str(self.__balanced[1][item])
+               self._balanced[1][item] = int(self._balanced[1][item])
+               if not self._balanced[1][item] == 1:
+                  tempstr += str(self._balanced[1][item])
                tempstr += str(Compound(str(item)).__str__()) + str(" ")
                if count < len(e2):
                   tempstr += str("+ ")
@@ -172,10 +172,10 @@ class Reaction(object):
    def get_coefficient_sum(self):
       """Returns the sum of the coefficients of the reactants and products in the reaction."""
       self.coefficient_sum = 0
-      for item in self.__balanced[0]:
-         self.coefficient_sum += int(self.__balanced[0][item])
-      for item in self.__balanced[1]:
-         self.coefficient_sum += int(self.__balanced[1][item])
+      for item in self._balanced[0]:
+         self.coefficient_sum += int(self._balanced[0][item])
+      for item in self._balanced[1]:
+         self.coefficient_sum += int(self._balanced[1][item])
 
       return self.coefficient_sum
 
@@ -183,11 +183,11 @@ class Reaction(object):
       """Returns the limiting reactant of the chemical reaction. Uses the moles/grams values from the Compound objects."""
       if lim_calc:
          lim_reac = Compound
-         product = (next(iter((self.__balanced[1]).items())))[1]
+         product = (next(iter((self._balanced[1]).items())))[1]
          moles = 0
          org_moles = 0
 
-         for item in list((self.__balanced[0]).items()):
+         for item in list((self._balanced[0]).items()):
             for com in self._reactant_store:
                if Compound(item[0]).__str__() == com.__str__():
                   moles = com.mole_amount
