@@ -37,17 +37,22 @@ cd tests
 python3 elementtest.py
 ```
 
-Chemsolve uses the [chempy](https://github.com/bjodah/chempy) library.
+Chemsolve makes use of the [chempy](https://github.com/bjodah/chempy) library for backend stoichiometry calculations.
 
 ## Using Chemsolve
 
-Chemsolve relies heavily on class framework with classes representing chemical objects: elements, compounds, reactions.
+Chemsolve relies heavily on an object-based framework with classes representing important objects in chemistry: elements, compounds, reactions. 
+The structure of Chemsolve is similar to the following:
 
 ![Classes](https://raw.githubusercontent.com/amogh7joshi/chemsolve/master/images/objects.png)
 
+In addition, Chemsolve includes numerous features to ease chemistry calculations, available in the associated modules within 
+Chemsolve, such as molarity and molality calculations in `chemsolve.solutions` and the ideal gas formula within 
+`chemsolve.gases`. 
+
 ### Examples
 
-Examples for all of the implemented structures can be found in `/examples`:
+Examples for all of the primary implemented structures can be found in `/examples`:
 1. The [Element Class](https://github.com/amogh7joshi/chemsolve/blob/master/examples/element_example.ipynb) and usage.
 2. The [Compound Class](https://github.com/amogh7joshi/chemsolve/blob/master/examples/compound_example.ipynb) and usage.
 3. The [Reaction Class](https://github.com/amogh7joshi/chemsolve/blob/master/examples/reaction_example.ipynb) and usage. 
@@ -77,11 +82,12 @@ print(reaction.balanced_reaction)
 print(reaction.limiting_reactant)
 ```
 
-*For further reference, please visit `/examples`.*
+*For further reference, please visit `/examples`.* 
 
 ## License
 
-All code in this library is avaliable under the [MIT License](../blob/master/LICENSE).
+All code in this library is available under the [MIT License](../blob/master/LICENSE). You are welcome
+to download the repository on your own and work with it, however. 
 
 ## Issues
 
