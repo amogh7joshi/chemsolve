@@ -74,12 +74,18 @@ class Reaction(object):
    def __str__(self):
       return self.original_reaction
 
-   def __call__(self, *args, **kwargs):
-      pass
-      #TODO: Add to this call function.
-
    def __getattr__(self, item):
-      return "The attribute " + str(item) + " does not exist within this class."
+      raise AttributeError("The attribute " + str(item) + " does not exist within this class.")
+
+   def __contains__(self, item):
+      # Determine if a compound is in the reaction.
+      if isinstance(item, Compound):
+         if item.__repr__() in self.reactants or item.__repr__() in self.products:
+            return True
+      elif isinstance(item, str):
+         if item in self.reactants or item in self.products:
+            return True
+      return False
 
    @classmethod
    def fromCombustion(cls, *args, hydrocarbon = True, othercompound = False, sample_mass = 0.0, **kwargs):
@@ -183,7 +189,7 @@ class Reaction(object):
    def get_limiting_reactant(self, lim_calc = False):
       """Returns the limiting reactant of the chemical reaction. Uses the moles/grams values from the Compound objects."""
       if lim_calc:
-         lim_reac = Compound
+         lim_reac = None
          product = (next(iter((self._balanced[1]).items())))[1]
          moles = 0
          org_moles = 0
