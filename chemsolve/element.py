@@ -57,10 +57,10 @@ class Element(object):
       return str(self.element_name.title())
 
    def __repr__(self):
-      return self.__str__()
+      return str(self.element_symbol.title())
 
    def __getattr__(self, item):
-      if item == "percent_of": # Special feature only avaliable in the SpecialElement class.
+      if item == "percent_of": # Special feature, only available in the SpecialElement class.
          raise AttributeError("If you want to use percentages, you must use the SpecialElement class.")
 
    def __call__(self, **kwargs):
