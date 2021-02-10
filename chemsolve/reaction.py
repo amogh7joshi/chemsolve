@@ -86,8 +86,6 @@ class Reaction(object):
       '''
       An implementation of a class method representing a combustion reaction.
       '''
-      global main_reactant
-
       if not hydrocarbon:
          if sample_mass == 0.0:
             raise AttributeError("You must provide the total mass of the product in order to determine the quantity of oxygen.")
@@ -108,10 +106,13 @@ class Reaction(object):
             product_store.append(compound)
             products.append(compound.__repr__())
 
+      # Calculate main reactant.
+      main_reactant = None
+
       if hydrocarbon:
          if othercompound:
-            main_reactant = Compound(determine_main_compound(product_store,
-               sample_mass, hydrocarbon = hydrocarbon, othercompound = True)).__repr__()
+            main_reactant = Compound(determine_main_compound(product_store, sample_mass, hydrocarbon = hydrocarbon,
+                                                             othercompound = True)).__repr__()
          else:
             main_reactant = Compound(determine_main_compound(product_store, sample_mass, hydrocarbon = hydrocarbon))\
                            .__repr__()
@@ -202,7 +203,7 @@ class Reaction(object):
 
 @ChemsolveDeprecationWarning('CombustionTrain', future_version ='2.0.0')
 class CombustionTrain(Reaction):
-   '''
+   """
    Determines an unknown compound in a combustion reaction.
 
    Used in a combustion reaction, when knowing the mass of the initial compound(made up of C, H, and O),
@@ -220,10 +221,10 @@ class CombustionTrain(Reaction):
    **You must enter the products in the order: CO2, H2O, <other element/compound>.
 
    The limiting reactant will always be assumed to be the non-oxygen reactant, as with most calculated
-   combustion reaction.
+   combustion reactions.
 
    **This class only determines the reacting compound, so DO NOT use this class for a regular reaction.
-   '''
+   """
    def __init__(self, *args, hydrocarbon = True, othercompound = False, sample_mass = 0.0, **kwargs):
       # A lot of errors may arise, all need to be prevented.
       if not hydrocarbon:
@@ -239,9 +240,10 @@ class CombustionTrain(Reaction):
       for compound in args:
          try:
             compound.mass
-         except AttributeError as exception:
-            print("You must provide the masses of the compounds as acquired in the Compound definition.")
-            raise exception
+         except AttributeError:
+            raise AttributeError("You must provide the masses of the compounds as acquired in the Compound definition.")
+         except Exception as e:
+            raise e
          else:
             self.__product_store.append(compound)
             self.products.append(compound.__repr__())
