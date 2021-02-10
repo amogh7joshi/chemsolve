@@ -1,6 +1,7 @@
 import warnings
-
 warnings.filterwarnings("ignore")
+import logging
+logging.basicConfig(format = '%(levelname)s - %(name)s: %(message)s')
 
 from .element import *
 from .compound import *

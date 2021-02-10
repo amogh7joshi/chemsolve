@@ -29,10 +29,12 @@ except ImportError:
 
 class Compound(object):
    def __init__(self, compound, mol_comp = None, *args, **kwargs):
-      if mol_comp: self.compound = mol_comp[0]; self.empirical = mol_comp[1]
-      else: self.compound = pt.formula(compound)
+      if mol_comp:
+         self.compound = mol_comp[0]; self.empirical = mol_comp[1]
+      else:
+         self.compound = pt.formula(compound)
       self.mass = self.get_mass()
-      self.compound_elements_list = self.__get_elements_in_compound_ions(compound)
+      self.compound_elements_list = self._get_compound_ions(compound)
       self.compound_elements = {}
       self.compound.elements = self.get_elements_in_compound()
       self.print_compound = Substance.from_formula(compound)
@@ -141,18 +143,18 @@ class Compound(object):
       '''
       return self.compound.mass
 
-   def __get_elements_in_compound_ions(self, compound):
+   @staticmethod
+   def _get_compound_ions(compound):
       '''
       Returns each of the individual polyatomic ions in the element (both element symbol and number).
       '''
-      t = compound
-      if "(" in t:
-         if ")" not in t:
+      if "(" in compound: # Parse compound if it contains an item in parenthesis
+         if ")" not in compound:
             raise TypeError("That is not a valid format for a compound.")
-         left = t.index("(")
-         right = t.index(")")
-         charge = int(t[right + 1])
-         f = re.findall('[A-Z][^A-Z]*', t[(left + 1):right])
+         left = compound.index("(")
+         right = compound.index(")")
+         charge = int(compound[right + 1])
+         f = re.findall('[A-Z][^A-Z]*', compound[(left + 1):right])
          replacer = ""
          for val in f:
             val = str(val)
@@ -165,9 +167,9 @@ class Compound(object):
                val += str(charge)
             replacer += val
 
-         t = t[:left] + str(replacer)
+         compound = compound[:left] + str(replacer)
 
-      return re.findall('[A-Z][^A-Z]*', str(t))
+      return re.findall('[A-Z][^A-Z]*', str(compound))
 
    def get_elements_in_compound(self):
       '''
@@ -183,16 +185,14 @@ class Compound(object):
                self.compound_elements.update({''.join(item_val[:-1]): int(item_val[-1])})
          else:
             self.compound_elements.update({item: 1})
+      return self.compound_elements
 
-   '''
-   Functions which perform calculations.
-   '''
    def moles_in_compound(self, element):
       '''
       Returns the number of moles of a certain element within one mole of the compound.
       '''
       try:
-         return(self.compound_elements[element])
+         return self.compound_elements[element]
       except KeyError:
          print("That is not an element in this compound.")
       except AttributeError:
