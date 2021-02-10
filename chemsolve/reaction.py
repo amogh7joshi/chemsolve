@@ -15,7 +15,7 @@ from chemsolve.utils.combustion import determine_main_compound
 from chemsolve.utils.warnings import assert_presence
 from chemsolve.utils.warnings import ChemsolveDeprecationWarning
 
-__all__ = ['Reaction']
+__all__ = ['Reaction', 'CombustionTrain']
 
 try:
    import periodictable as pt
