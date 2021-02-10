@@ -234,9 +234,10 @@ class SolutionCompound(Compound):
    """
    def __init__(self, compound, charge = None, state = "aq", **kwargs):
       super().__init__(compound, bypass = True)
-      if charge not in range(-5, 6):
-         raise ValueError(f"The value for charge as initiated, {charge}, is too high or too low.")
-      self.charge = charge
+      if charge: # Charge can also not be provided.
+         if charge not in range(-5, 6):
+            raise ValueError(f"The value for charge as initiated, {charge}, is too high or too low.")
+         self.charge = charge
       if state not in ["aq", "s", "l", "g"]:
          raise ValueError("The state of the compound must be either aqueous, solid, liquid, or gaseous.")
       self.state = state
