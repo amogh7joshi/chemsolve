@@ -14,7 +14,7 @@ from chemsolve.element import SpecialElement
 from chemsolve.utils.from_formula import determine_empirical_coef
 from chemsolve.utils.from_formula import determine_empirical, determine_molecular
 from chemsolve.utils.constants import *
-from chemsolve.utils.warnings import RemovalWarning
+from chemsolve.utils.warnings import ChemsolveDeprecationWarning
 
 __all__ = ['Compound', 'CarbonDioxide', 'Water']
 
@@ -126,7 +126,7 @@ class Compound(object):
       empirical_coef = determine_empirical_coef(compound_elements)
       empirical = Compound(determine_empirical(compound_elements, empirical_coef))
       empirical_mass = Compound(empirical.__repr__()).mass
-      if molecular == True:
+      if molecular:
          molecular = determine_molecular(empirical_mass, compound_elements, molar_mass, empirical_coef, molecular=True)
          return cls(compound = None, mol_comp = [molecular.__repr__(), empirical], grams = molar_mass)
       else:
@@ -225,7 +225,7 @@ class SolutionCompound(Compound):
          raise ValueError("The state of the compound must be either aqueous, solid, liquid, or gaseous.")
       self.state = state
 
-class FormulaCompound(Compound): #TODO: Will be deprecated in a future version.
+class FormulaCompound(Compound): # TODO: Will be deprecated in a future version.
    '''
    Finds empirical, molecular, and other formulas of a compound.
 
@@ -238,7 +238,7 @@ class FormulaCompound(Compound): #TODO: Will be deprecated in a future version.
    **Use the SpecialElement class to define elements which are going to be used to determine the compound.
    '''
    def __init__(self, *args, molecular = False, **kwargs):
-      RemovalWarning(future_version = "2.0.0")
+      ChemsolveDeprecationWarning(self, future_version = "2.0.0")
       self.__compound_elements = []
 
       if len(args) < 2:

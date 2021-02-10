@@ -13,7 +13,7 @@ from chemsolve.compound import Compound
 from chemsolve.compound import FormulaCompound
 from chemsolve.utils.combustion import determine_main_compound
 from chemsolve.utils.warnings import assert_presence
-from chemsolve.utils.warnings import RemovalWarning
+from chemsolve.utils.warnings import ChemsolveDeprecationWarning
 
 __all__ = ['Reaction']
 
@@ -239,7 +239,7 @@ class CombustionTrain(Reaction): #TODO: Will be deprecated in a future version.
    **This class only determines the reacting compound, so DO NOT use this class for a regular reaction.
    '''
    def __init__(self, *args, hydrocarbon = True, othercompound = False, sample_mass = 0.0, **kwargs):
-      RemovalWarning(future_version = "2.0.0")
+      ChemsolveDeprecationWarning(self, future_version = '2.0.0')
       # A lot of errors may arise, all need to be prevented.
       if hydrocarbon == False:
          if sample_mass == 0.0:
