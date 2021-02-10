@@ -13,3 +13,6 @@ print(boron.gram_amount)
 boron(grams = 30.00)
 print(boron.mole_amount)
 print(boron.gram_amount)
+
+magnesium = Element.from_electron_configuration('[Ne]3s2')
+assert magnesium.__str__() == "Magnesium"
