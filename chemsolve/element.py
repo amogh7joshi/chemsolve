@@ -86,9 +86,11 @@ class Element(object):
       """Returns the element name from the symbol."""
       try:
          return self._properties['Name']
-      except AttributeError:
+      except AttributeError as ae:
          if ("+" or "-") in self.element_symbol:
             raise AttributeError("That is not an existing element in the periodic table.")
+         else:
+            raise ae
 
    def _get_full_electron_configuration(self):
       """Returns the entire electron configuration of the element, ignoring the noble gas abbreviation."""
