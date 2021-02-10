@@ -242,17 +242,17 @@ class SolutionCompound(Compound):
          raise ValueError("The state of the compound must be either aqueous, solid, liquid, or gaseous.")
       self.state = state
 
-      if 'molarity' and 'volume' in kwargs:
+      if 'molarity' in kwargs and 'volume' in kwargs:
          self.molarity = kwargs['molarity']
          self.volume = kwargs['volume']
          self.mole_amount = operator.__mul__(self.molarity, self.volume)
 
-      if 'molarity' and 'moles' in kwargs:
+      if 'molarity' in kwargs and 'moles' in kwargs:
          self.molarity = kwargs['molarity']
          self.mole_amount = kwargs['mole_amount']
          self.volume = operator.__truediv__(self.mole_amount, self.molarity)
 
-      if 'moles' and 'volume' in kwargs:
+      if 'moles' in kwargs and 'volume' in kwargs:
          self.mole_amount = kwargs['moles']
          self.volume = kwargs['volume']
          self.molarity = operator.__truediv__(self.mole_amount, self.volume)
