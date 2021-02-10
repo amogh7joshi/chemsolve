@@ -40,38 +40,9 @@ class Compound(object):
       self.print_compound = Substance.from_formula(compound)
       self.store_comp = compound
 
-      '''
-      The class can calculate quantities of moles and grams, depending on the specific keywords 'moles' and 'grams'.
-      '''
-      if "moles" in kwargs:
-         self.mole_amount = kwargs["moles"]
-         self.gram_amount = round(operator.mul(self.mole_amount, self.mass), 4)
-         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
-
-      if "grams" in kwargs:
-         self.gram_amount = kwargs["grams"]
-         self.mole_amount = round(operator.truediv(self.gram_amount, self.mass), 4)
-         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
-
-      if "molecules" in kwargs:
-         self.molecules = kwargs["molecules"]
-         self.mole_amount = round(operator.__truediv__(self.molecules, AVOGADRO), 4)
-         self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
-
-      if "volume" in kwargs:
-         # TODO: Moles from molarity.
-         self.volume = kwargs["volume"]
-
-      if "moles" in kwargs and "grams" in kwargs:
-         raise ValueError("You cannot provide both the number of moles and grams of the element at a single time.")
-      if "grams" in kwargs and "volume" in kwargs:
-         raise ValueError("You cannot provide both the volume and the gram value at the same time.")
-
-      if "structure" in kwargs:
-         if kwargs["structure"] in STRUCTURES:
-            self.structure = kwargs["structure"]
-         else:
-            raise ValueError("That is not an appropriate compound structure.")
+      if 'bypass' not in kwargs:
+         # If a subclass is initialized, then don't set default values.
+         self._parse_kwargs(kwargs)
 
    def __str__(self):
       return str(self.print_compound.unicode_name)
@@ -115,14 +86,41 @@ class Compound(object):
          self.mole_amount = round(operator.__truediv__(self.molecules, AVOGADRO), 4)
          self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
 
-      if "volume" in kwargs:
-         # TODO: Moles from molarity.
-         self.volume = kwargs["volume"]
+      if "moles" in kwargs and "grams" in kwargs:
+         raise ValueError("You cannot provide both the number of moles and grams of the element at a single time.")
+      if "grams" in kwargs and "molecules" in kwargs:
+         raise ValueError("You cannot provide both the molecule and the gram value at the same time.")
+
+   def _parse_kwargs(self, kwargs):
+      if "moles" in kwargs:
+         self.mole_amount = kwargs["moles"]
+         self.gram_amount = round(operator.mul(self.mole_amount, self.mass), 4)
+         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
+
+      if "grams" in kwargs:
+         self.gram_amount = kwargs["grams"]
+         self.mole_amount = round(operator.truediv(self.gram_amount, self.mass), 4)
+         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
+
+      if "molecules" in kwargs:
+         self.molecules = kwargs["molecules"]
+         self.mole_amount = round(operator.__truediv__(self.molecules, AVOGADRO), 4)
+         self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
+
+      if "volume" or "molarity" in kwargs:
+         raise AttributeError("If you want to use volume or molarity, then you need to use the SolutionCompound class.")
 
       if "moles" in kwargs and "grams" in kwargs:
          raise ValueError("You cannot provide both the number of moles and grams of the element at a single time.")
       if "grams" in kwargs and "volume" in kwargs:
          raise ValueError("You cannot provide both the volume and the gram value at the same time.")
+
+      if "structure" in kwargs:
+         if kwargs["structure"] in STRUCTURES:
+            self.structure = kwargs["structure"]
+         else:
+            raise ValueError("That is not an appropriate compound structure.")
+
 
    @classmethod
    def fromFormula(cls, *args, molecular = False, **kwargs): # To be implemented --> FormulaCompound as a classmethod.
@@ -227,19 +225,37 @@ class Compound(object):
 
 
 class SolutionCompound(Compound):
-   '''
+   """
    Used as an implementation of the compound class for compounds in solutions.
 
-   In addition to the usual attributes, also accepts a charge and a state class.
-   '''
-   def __init__(self, compound, charge = 0, state = "aq"):
-      super().__init__(compound)
+   Accepts either molarity and volume or mole quantity attributes, in addition to
+   charge and state attributes in order to represent a complete solution compound.
+   Charge defaults to None and state defaults to 'aq', must be manually set otherwise.
+   """
+   def __init__(self, compound, charge = None, state = "aq", **kwargs):
+      super().__init__(compound, bypass = True)
       if charge not in range(-5, 6):
          raise ValueError(f"The value for charge as initiated, {charge}, is too high or too low.")
       self.charge = charge
       if state not in ["aq", "s", "l", "g"]:
          raise ValueError("The state of the compound must be either aqueous, solid, liquid, or gaseous.")
       self.state = state
+
+      if 'molarity' and 'volume' in kwargs:
+         self.molarity = kwargs['molarity']
+         self.volume = kwargs['volume']
+         self.mole_amount = operator.__mul__(self.molarity, self.volume)
+
+      if 'molarity' and 'moles' in kwargs:
+         self.molarity = kwargs['molarity']
+         self.mole_amount = kwargs['mole_amount']
+         self.volume = operator.__truediv__(self.mole_amount, self.molarity)
+
+      if 'moles' and 'volume' in kwargs:
+         self.mole_amount = kwargs['moles']
+         self.volume = kwargs['volume']
+         self.molarity = operator.__truediv__(self.mole_amount, self.volume)
+
 
 @ChemsolveDeprecationWarning('FormulaCompound', future_version = "2.0.0")
 class FormulaCompound(Compound): # TODO: Will be deprecated in a future version.
