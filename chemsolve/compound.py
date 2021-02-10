@@ -59,7 +59,7 @@ class Compound(object):
          self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
 
       if "volume" in kwargs:
-         #TODO: Moles from molarity.
+         # TODO: Moles from molarity.
          self.volume = kwargs["volume"]
 
       if "moles" in kwargs and "grams" in kwargs:
@@ -79,9 +79,25 @@ class Compound(object):
    def __repr__(self):
       return str(self.compound)
 
+   def __int__(self):
+      return int(self.mass)
+
+   def __float__(self):
+      return self.mass
+
    def __getattr__(self, item):
-      if not item in ["mole_amount", "gram_amount", "volume"]:
-         print("The attribute " + str(item) + " does not exist within this class or has not been defined yet.")
+      if item not in ["mole_amount", "gram_amount", "volume"]:
+         raise AttributeError("The attribute " + str(item) + " does not exist within this class.")
+
+   def __contains__(self, item):
+      # Determine whether a element is in the compound.
+      if isinstance(item, Element):
+         if item.element_symbol in self.compound_elements_list:
+            return True
+      elif isinstance(item, str):
+         if item in self.compound_elements_list:
+            return True
+      return False
 
    def __call__(self, **kwargs):
       if "moles" in kwargs:
