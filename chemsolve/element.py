@@ -82,6 +82,30 @@ class Element(object):
       if all(x in ["moles", "grams", "kwargs"] for x in [kwargs]):
          raise ValueError("You cannot provide multiple quantities of the element at a single time.")
 
+   @classmethod
+   def from_molar_mass(cls, mass):
+      """Creates an Element class from a provided molar mass."""
+      table = PeriodicTable()
+
+      for indx, molar_mass in enumerate(table['AtomicMass']):
+         if abs(mass - molar_mass) <= 0.05: # If the molar mass provided is close to the actual one.
+            return cls(table['Symbol'][indx])
+      raise ValueError(f"Received invalid molar mass {mass}, not close to any molar masses on the periodic table.")
+
+   @classmethod
+   def from_electron_configuration(cls, config):
+      """Creates an Element class from a provided electron configuration."""
+      table = PeriodicTable()
+
+      for indx, configuration in enumerate(table['ElectronConfiguration']):
+         if config == configuration:
+            return cls(table['Symbol'][indx])
+      for indx, element in enumerate(table['Symbol']):
+         if config == Element(table['Symbol'][indx]).full_electron_configuration:
+            return cls(table['Symbol'][indx])
+      raise ValueError(f"Received invalid electron configuration {config}, not a valid noble gas "
+                       f"configuration or complete configuration on the periodic table.")
+
    def get_element_name(self):
       """Returns the element name from the symbol."""
       try:
