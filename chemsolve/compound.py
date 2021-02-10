@@ -107,7 +107,7 @@ class Compound(object):
          self.mole_amount = round(operator.__truediv__(self.molecules, AVOGADRO), 4)
          self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
 
-      if "volume" or "molarity" in kwargs:
+      if "volume" in kwargs or "molarity" in kwargs:
          raise AttributeError("If you want to use volume or molarity, then you need to use the SolutionCompound class.")
 
       if "moles" in kwargs and "grams" in kwargs:
