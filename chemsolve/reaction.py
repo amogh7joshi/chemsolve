@@ -200,7 +200,8 @@ class Reaction(object):
       else:
          return False
 
-class CombustionTrain(Reaction): #TODO: Will be deprecated in a future version.
+@ChemsolveDeprecationWarning('CombustionTrain', future_version ='2.0.0')
+class CombustionTrain(Reaction):
    '''
    Determines an unknown compound in a combustion reaction.
 
@@ -224,7 +225,6 @@ class CombustionTrain(Reaction): #TODO: Will be deprecated in a future version.
    **This class only determines the reacting compound, so DO NOT use this class for a regular reaction.
    '''
    def __init__(self, *args, hydrocarbon = True, othercompound = False, sample_mass = 0.0, **kwargs):
-      ChemsolveDeprecationWarning(self, future_version = '2.0.0')
       # A lot of errors may arise, all need to be prevented.
       if not hydrocarbon:
          if sample_mass == 0.0:

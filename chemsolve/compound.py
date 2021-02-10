@@ -225,6 +225,7 @@ class SolutionCompound(Compound):
          raise ValueError("The state of the compound must be either aqueous, solid, liquid, or gaseous.")
       self.state = state
 
+@ChemsolveDeprecationWarning('FormulaCompound', future_version = "2.0.0")
 class FormulaCompound(Compound): # TODO: Will be deprecated in a future version.
    '''
    Finds empirical, molecular, and other formulas of a compound.
@@ -238,7 +239,6 @@ class FormulaCompound(Compound): # TODO: Will be deprecated in a future version.
    **Use the SpecialElement class to define elements which are going to be used to determine the compound.
    '''
    def __init__(self, *args, molecular = False, **kwargs):
-      ChemsolveDeprecationWarning(self, future_version = "2.0.0")
       self.__compound_elements = []
 
       if len(args) < 2:

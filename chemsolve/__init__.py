@@ -1,9 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding = utf-8 -*-
 import warnings
-warnings.filterwarnings("ignore")
+# warnings.filterwarnings("ignore")
 import logging
 logging.basicConfig(format = '%(levelname)s - %(name)s: %(message)s')
+
+# Update logging configuration.
+class DuplicateLog(object):
+   def __init__(self):
+      self.messages = set()
+
+   def filter(self, record):
+      rv = record.msg not in self.messages
+      self.messages.add(record.msg)
+      return rv
 
 # Import general Chemsolve functionalities.
 from .element import *
