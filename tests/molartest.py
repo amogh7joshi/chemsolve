@@ -1,4 +1,4 @@
 from chemsolve import molarity
-from chemsolve import Compound
+from chemsolve.compound import SolutionCompound
 
-print(molarity(Compound("H2SO4", volume = 2.14), setting = "moles", molarity = 2.15))
+print(molarity(SolutionCompound("H2SO4", volume = 2.14), setting = "moles", molarity = 2.15))
