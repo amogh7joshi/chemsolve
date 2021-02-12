@@ -80,6 +80,13 @@ class Element(object):
          self.mole_amount = round(operator.__truediv__(self.molecules, AVOGADRO), 4)
          self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
 
+      if "percent" in kwargs: # Primarily if you are setting up elements for Compound.from_formula.
+         if float(kwargs["percent"]) >= 1:
+            raise TypeError("That is not a valid input for the percent field. Enter a percent as a decimal.")
+         self.percent_of = kwargs["percent"]
+         self.mole_amount = False
+         self.gram_amount = False
+
       if all(x in ["moles", "grams", "kwargs"] for x in [kwargs]):
          raise ValueError("You cannot provide multiple quantities of the element at a single time.")
 
@@ -135,7 +142,7 @@ class Element(object):
       """Calculates the class gram quantity from moles."""
       return operator.mul(self.mole_amount, self.mass)
 
-@ChemsolveDeprecationWarning('SpecialElement', future_version = 'v2.0.0')
+@ChemsolveDeprecationWarning('SpecialElement', future_version = '2.0.0')
 class SpecialElement(Element):
    """
    A special variant of the Element class created for the FormulaCompound class.

@@ -135,8 +135,8 @@ class Compound(object):
       if len(args) < 2:
          raise ValueError("You may be using the wrong method, as fromFormula is used to determine compound formulas.")
       for element in args:
-         if not isinstance(element, SpecialElement):
-            raise TypeError("The arguments of this class should only be SpecialElement classes.")
+         if not isinstance(element, Element):
+            raise TypeError("The arguments of this class should only be Element classes.")
          else:
             compound_elements.append(element)
 
@@ -287,8 +287,8 @@ class FormulaCompound(Compound):
       if len(args) < 2:
          raise ValueError("You may be using the wrong class. The FormulaCompound class is used to determine compound formulas.")
       for element in args:
-         if not isinstance(element, SpecialElement):
-            raise TypeError("The arguments of this class should only be SpecialElement classes.")
+         if not isinstance(element, Element):
+            raise TypeError("The arguments of this class should only be Element classes.")
          else:
             self.__compound_elements.append(element)
 
