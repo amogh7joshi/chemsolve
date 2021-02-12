@@ -1,6 +1,7 @@
 import operator
 
 from chemsolve.utils.periodictable import PeriodicTable
+from chemsolve.utils.warnings import ChemsolveDeprecationWarning
 from chemsolve.utils.constants import *
 
 __all__ = ['Element', 'SpecialElement']
@@ -134,7 +135,7 @@ class Element(object):
       """Calculates the class gram quantity from moles."""
       return operator.mul(self.mole_amount, self.mass)
 
-
+@ChemsolveDeprecationWarning('SpecialElement', future_version = 'v2.0.0')
 class SpecialElement(Element):
    """
    A special variant of the Element class created for the FormulaCompound class.

@@ -24,6 +24,7 @@ and they will be entirely removed in v2.0.0 in favor of `Compound.from_formula` 
 - Changing the input method of the `Reaction` class, instead of a list of string arguments separated with a `'-->'`, the inputs
 will be two individual dictionaries where reactants and products can be inputted. 
 - Renaming the `Reaction.get_reactants` and `Reaction.get_products` properties directly to `Reaction.reactants` and `Reaction.products`.
+- Removing the `SpecialElement` class, and replacing any of its prior instances with `Element` instead.
 
 *Note: This is not a complete list of changes, additional changes will be added as seen fit. Furthermore, changes may be removed from 
 this list if they are determined to be not worth or not feasible to add.* 
