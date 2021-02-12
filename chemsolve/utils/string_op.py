@@ -7,9 +7,7 @@ from chemsolve.utils.constants import REDOX, BASEREDOX
 from chemsolve.element import Element
 from chemsolve.compound import Compound
 
-'''
-A loose collection of functions which perform operations on strings.
-'''
+# A loose collection of functions which perform operations on strings.
 
 # General Functions
 
@@ -34,9 +32,7 @@ def index_gather(main, choose):
 # Specialized Functions
 
 def charge(compound):
-   '''
-   Returns the charge of a compound from the inputted string.
-   '''
+   """Returns the charge of a compound from the inputted string."""
    if compound[-1] in ["+", "-"]:
       rem = re.findall("[A-Za-z]", compound)
       ind = compound.index(rem[-1])
@@ -44,17 +40,18 @@ def charge(compound):
          return [compound[:-2], compound[-2:]]
       try:
          Element(compound[: len(compound) - 1]); return [compound[:-1], compound[-1:]]
-      except: pass
+      except:
+         pass
       try:
          Element(compound[: len(compound) - 2]); return [compound[:-2], compound[-2:]]
-      except: pass
+      except:
+         pass
       return [compound[:-1], compound[-1:]]
-   else: return [compound, 0]
+   else:
+      return [compound, 0]
 
-def compound_index_gather(main, choose): #TODO: May not work for double-digit subscripts.
-   '''
-   Adds to the initial indices from index_gather the indices of the subscript of an ignored substring.
-   '''
+def compound_index_gather(main, choose): # TODO: May not work for double-digit subscripts.
+   """Adds to the initial indices from index_gather the indices of the subscript of an ignored substring."""
    comp = Compound(main)
    indices = []
    for element in comp.compound_elements:
@@ -70,9 +67,7 @@ def compound_index_gather(main, choose): #TODO: May not work for double-digit su
    return indices
 
 def charge_value(input):
-   '''
-   Returns the numerical value of the charge from the string.
-   '''
+   """Returns the numerical value of the charge from the string."""
    charges = {
       0: 0,
       "0": 0,
@@ -93,27 +88,24 @@ def charge_value(input):
 # Master Functions
 
 def ignore(list, param = None, ignore = None, *args):
-   '''
-   Returns a string without certain substrings as determined by the parameter or arguments.
-   '''
-   global choose, newlist
+   """Returns a string without certain substrings as determined by the parameter or arguments."""
+   choose = []
    newlist = []
-   if param == None:
+   if param is None:
       choose.append(args)
    if param == REDOX:
       choose = ["H", "O"]
    if param == BASEREDOX:
       choose = ["H", "O", "Na", "K", "Li", "Cl", "F", "Br", "Ca"]
-   if ignore is not None: choose.append(*ignore)
+   if ignore is not None:
+      choose.append(*ignore)
    for item in list:
       remove = compound_index_gather(item, choose)
       newlist.append(''.join(char for indx, char in enumerate(item) if indx not in remove))
    return newlist
 
 def oxidation_number(comp, charge, param = None):
-   '''
-   Returns the oxidation number of a main element in a compound.
-   '''
+   """Returns the oxidation number of a main element in a compound."""
    rest_charge = 0
    compound = Compound(comp)
    preset = {
@@ -128,20 +120,21 @@ def oxidation_number(comp, charge, param = None):
       main[0] = main[0][:-1]
    in_compound = compound.compound_elements
    for element in in_compound:
-      try: rest_charge += preset[element] * in_compound[element]
-      except: pass
+      try:
+         rest_charge += preset[element] * in_compound[element]
+      except:
+         pass
    charge = charge_value(charge)
    num = int((charge - rest_charge) / in_compound[main[0]])
    return num
 
 def num_in(nums, list):
-   '''
-   Whether the number of items in a list is as it should be.
-   '''
+   """Whether the number of items in a list is as it should be."""
    i = 0
-   for object in list:
-      if object: i+= 1
-   return (i == nums)
+   for obj in list:
+      if obj:
+         i += 1
+   return i == nums
 
 
 
