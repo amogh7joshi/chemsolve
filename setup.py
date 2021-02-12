@@ -3,13 +3,13 @@ from setuptools import setup
 from setuptools import find_packages
 
 directory = path.abspath(path.dirname(__file__))
-with open(path.join(directory, 'README.md'), encoding='utf-8') as f:
+with open(path.join(directory, 'README.md'), encoding = 'utf-8') as f:
    long_description = f.read()
 
 
 setup(
    name = 'chemsolve',
-   version = '1.6.0',
+   version = '1.7.0',
    author = "Amogh Joshi",
    packages = find_packages(),
    author_email = "joshi.amoghn@gmail.com",
