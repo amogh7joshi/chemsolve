@@ -128,6 +128,13 @@ class Reaction(object):
 
       return cls(Compound(main_reactant), Compound("O2"), "-->", *product_store, main_reactant = main_reactant)
 
+   @staticmethod
+   def from_combustion(*args, hydrocarbon = True, othercompound = False, sample_mass = 0.0, **kwargs):
+      """A transitional method for v2.0.0, will eventually replace fromCombustion."""
+
+      return Reaction.fromCombustion(*args, hydrocarbon = hydrocarbon, othercompound = othercompound,
+                                     sample_mass = sample_mass, **kwargs)
+
    @property
    def get_reactants(self):
       """Returns the reactants of the reaction."""
