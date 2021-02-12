@@ -155,9 +155,11 @@ class Compound(object):
       else:
          return cls(compound = empirical.__repr__())
 
-   '''
-   Functions which gather attributes.
-   '''
+   @staticmethod
+   def from_formula(*args, molecular = False, **kwargs):
+      """A transitional method for v2.0.0, will eventually replace fromFormula."""
+      return Compound.fromFormula(*args, molecular = molecular, **kwargs)
+
    def get_mass(self):
       '''
       Returns the atomic (and therefore molar) mass of the compound.
