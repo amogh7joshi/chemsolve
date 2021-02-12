@@ -29,10 +29,15 @@ except ImportError:
 
 class Compound(object):
    def __init__(self, compound, mol_comp = None, *args, **kwargs):
-      if mol_comp:
-         self.compound = mol_comp[0]; self.empirical = mol_comp[1]
+      if mol_comp and compound is None:
+         self.compound = mol_comp[0]
+         self.empirical = mol_comp[1]
       else:
-         self.compound = pt.formula(compound)
+         try:
+            self.compound = pt.formula(compound)
+         except Exception as e:
+            raise e
+
       self.mass = self.get_mass()
       self.compound_elements_list = self._get_compound_ions(compound)
       self.compound_elements = {}
@@ -121,15 +126,14 @@ class Compound(object):
          else:
             raise ValueError("That is not an appropriate compound structure.")
 
-
    @classmethod
-   def fromFormula(cls, *args, molecular = False, **kwargs): # To be implemented --> FormulaCompound as a classmethod.
-      global molar_mass
+   def fromFormula(cls, *args, molecular = False, **kwargs):
+      """Creates a compound from provided percentages of different elements in the compound."""
+      molar_mass = None
       compound_elements = []
 
       if len(args) < 2:
-         raise ValueError(
-            "You may be using the wrong method, as fromFormula is used to determine compound formulas.")
+         raise ValueError("You may be using the wrong method, as fromFormula is used to determine compound formulas.")
       for element in args:
          if not isinstance(element, SpecialElement):
             raise TypeError("The arguments of this class should only be SpecialElement classes.")
@@ -139,9 +143,12 @@ class Compound(object):
       if "mass" in kwargs:
          molar_mass = kwargs["mass"]
 
+      # Determine compound coefficients, and create compound from them.
       empirical_coef = determine_empirical_coef(compound_elements)
       empirical = Compound(determine_empirical(compound_elements, empirical_coef))
       empirical_mass = Compound(empirical.__repr__()).mass
+
+      # Create primary Compound class.
       if molecular:
          molecular = determine_molecular(empirical_mass, compound_elements, molar_mass, empirical_coef, molecular=True)
          return cls(compound = None, mol_comp = [molecular.__repr__(), empirical], grams = molar_mass)
@@ -257,9 +264,12 @@ class SolutionCompound(Compound):
          self.volume = kwargs['volume']
          self.molarity = operator.__truediv__(self.mole_amount, self.volume)
 
+   # def split_into_ions(self):
+   #    """Splits instance compound into its relevant ions with respect to overall charge."""
+   #    element = Element(2)._properties
 
 @ChemsolveDeprecationWarning('FormulaCompound', future_version = "2.0.0")
-class FormulaCompound(Compound): # TODO: Will be deprecated in a future version.
+class FormulaCompound(Compound):
    '''
    Finds empirical, molecular, and other formulas of a compound.
 
