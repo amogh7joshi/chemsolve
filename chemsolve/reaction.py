@@ -25,7 +25,7 @@ except ImportError:
    print("The module periodictable could not be found (may have not been installed).")
 
 class Reaction(object):
-   '''
+   """
    Stores a balanced/unbalanced chemical reaction.
 
    INPUTS:
@@ -37,7 +37,7 @@ class Reaction(object):
 
    If you want to use the calculation methods, you have to set the calculation booleans to True.
    Otherwise, it will force you to enter values for the moles/grams of each compound even if you don't have them.
-   '''
+   """
    def __init__(self, *args, lim_calc = False, main_reactant = None, **kwargs):
       self.lim_calc = lim_calc
       self.reactants = []
@@ -47,21 +47,21 @@ class Reaction(object):
       self._product_store = []
       assert_presence(self._reactant_store, self._product_store)
 
-      tempvar = self.reactants
-      tempvar2 = self._reactant_store
+      temp = self.reactants
+      temp2 = self._reactant_store
       for compound in args:
          if isinstance(compound, str):
             self.original_reaction += str("--> ")
-            tempvar = self.products
-            tempvar2 = self._product_store
+            temp = self.products
+            temp2 = self._product_store
          else:
-            tempvar2.append(compound)
+            temp2.append(compound)
             self.original_reaction += str(compound.__str__() + " ")
             if compound != args[-1] and not isinstance(args[args.index(compound) + 1], str):
                self.original_reaction += str("+ ")
             if not isinstance(compound, (Element, Compound)):
                raise TypeError("The object " + str(compound) + " is not of type Compound or related subclasses, please redefine it.")
-            else: tempvar.append(compound.__repr__())
+            else: temp.append(compound.__repr__())
 
       self._balanced = self._balance()
       self.balanced_reaction = self.balanced_display()
@@ -75,7 +75,7 @@ class Reaction(object):
       return self.original_reaction
 
    def __getattr__(self, item):
-      raise AttributeError("The attribute " + str(item) + " does not exist within this class.")
+      raise AttributeError("The attribute " + str(item) + " does not exist within the Reaction class.")
 
    def __contains__(self, item):
       # Determine if a compound is in the reaction.
@@ -89,9 +89,9 @@ class Reaction(object):
 
    @classmethod
    def fromCombustion(cls, *args, hydrocarbon = True, othercompound = False, sample_mass = 0.0, **kwargs):
-      '''
+      """
       An implementation of a class method representing a combustion reaction.
-      '''
+      """
       if not hydrocarbon:
          if sample_mass == 0.0:
             raise AttributeError("You must provide the total mass of the product in order to determine the quantity of oxygen.")
@@ -118,20 +118,19 @@ class Reaction(object):
       if hydrocarbon:
          if othercompound:
             main_reactant = Compound(determine_main_compound(product_store, sample_mass, hydrocarbon = hydrocarbon,
-                                                             othercompound = True)).__repr__()
+                                                             othercompound = True))
          else:
-            main_reactant = Compound(determine_main_compound(product_store, sample_mass, hydrocarbon = hydrocarbon))\
-                           .__repr__()
+            main_reactant = Compound(determine_main_compound(product_store, sample_mass,
+                                                             hydrocarbon = hydrocarbon))
       if not hydrocarbon:
          main_reactant = Compound(determine_main_compound(product_store, sample_mass, hydrocarbon = hydrocarbon),
-                                  grams = sample_mass).__repr__()
+                                  grams = sample_mass)
 
-      return cls(Compound(main_reactant), Compound("O2"), "-->", *product_store, main_reactant = main_reactant)
+      return cls(main_reactant, Compound("O2"), "-->", *product_store, main_reactant = main_reactant)
 
    @staticmethod
    def from_combustion(*args, hydrocarbon = True, othercompound = False, sample_mass = 0.0, **kwargs):
       """A transitional method for v2.0.0, will eventually replace fromCombustion."""
-
       return Reaction.fromCombustion(*args, hydrocarbon = hydrocarbon, othercompound = othercompound,
                                      sample_mass = sample_mass, **kwargs)
 
