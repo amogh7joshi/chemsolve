@@ -38,7 +38,7 @@ class Reaction(object):
    If you want to use the calculation methods, you have to set the calculation booleans to True.
    Otherwise, it will force you to enter values for the moles/grams of each compound even if you don't have them.
    """
-   def __init__(self, *args, lim_calc = False, main_reactant = None, **kwargs):
+   def __init__(self, *args, reactants = (), products = (), lim_calc = False, main_reactant = None, **kwargs):
       self.lim_calc = lim_calc
       self.reactants = []
       self.products = []
@@ -49,19 +49,29 @@ class Reaction(object):
 
       temp = self.reactants
       temp2 = self._reactant_store
-      for compound in args:
-         if isinstance(compound, str):
-            self.original_reaction += str("--> ")
-            temp = self.products
-            temp2 = self._product_store
-         else:
-            temp2.append(compound)
-            self.original_reaction += str(compound.__str__() + " ")
-            if compound != args[-1] and not isinstance(args[args.index(compound) + 1], str):
-               self.original_reaction += str("+ ")
-            if not isinstance(compound, (Element, Compound)):
-               raise TypeError("The object " + str(compound) + " is not of type Compound or related subclasses, please redefine it.")
-            else: temp.append(compound.__repr__())
+
+      if args: # Adding reactants/products through *args is deprecated, to be removed in v2.0.0.
+         # Warn of future deprecation.
+         ChemsolveDeprecationWarning("Adding compounds to a Reaction using *args is deprecated and will be "
+                                     "removed in v2.0.0. Start using the `reactants` and `products` arguments.",
+                                     future_version = 'bypass')
+         for compound in args:
+            if isinstance(compound, str):
+               self.original_reaction += str("--> ")
+               temp = self.products
+               temp2 = self._product_store
+            else:
+               temp2.append(compound)
+               self.original_reaction += str(compound.__str__() + " ")
+               if compound != args[-1] and not isinstance(args[args.index(compound) + 1], str):
+                  self.original_reaction += str("+ ")
+               if not isinstance(compound, (Element, Compound)):
+                  raise TypeError("The object " + str(compound) + " is not of type "
+                                  "Compound or related subclasses, please redefine it.")
+               else:
+                  temp.append(compound.__repr__())
+      else:
+         self._initialize_reaction(reactants, products)
 
       self._balanced = self._balance()
       self.balanced_reaction = self.balanced_display()
@@ -87,6 +97,27 @@ class Reaction(object):
             return True
       return False
 
+   def _initialize_reaction(self, reactants, products):
+      """Internal method to initialize the class reaction from inputs."""
+      # Add reactants to list of reactants and original reaction string.
+      for reactant in reactants:
+         self.original_reaction += str(reactant.__str__() + " ")
+         if reactant != reactants[-1]:
+            self.original_reaction += str("+ ")
+         self._reactant_store.append(reactant)
+         self.reactants.append(reactant.__repr__())
+
+      # Add the arrow differentiating reactants and products (to the printed reaction).
+      self.original_reaction += "--> "
+
+      # Add products to list of products and original reaction string.
+      for product in products:
+         self.original_reaction += str(product.__str__() + " ")
+         if product != products[-1]:
+            self.original_reaction += str("+ ")
+         self._product_store.append(product)
+         self.products.append(product.__repr__())
+
    @classmethod
    def fromCombustion(cls, *args, hydrocarbon = True, othercompound = False, sample_mass = 0.0, **kwargs):
       """
@@ -94,11 +125,13 @@ class Reaction(object):
       """
       if not hydrocarbon:
          if sample_mass == 0.0:
-            raise AttributeError("You must provide the total mass of the product in order to determine the quantity of oxygen.")
+            raise AttributeError("You must provide the total mass of the product in order "
+                                 "to determine the quantity of oxygen.")
          else:
             sample_mass = round(float(sample_mass), 4)
       if len(kwargs) > 3:
-         raise ValueError("The CombustionTrain class currently doesn't support more than one additional compound.")
+         raise ValueError("The Compound.fromCombustion method currently doesn't support more "
+                          "than one additional compound.")
 
       product_store = []
       products = []
@@ -137,12 +170,17 @@ class Reaction(object):
    @property
    def get_reactants(self):
       """Returns the reactants of the reaction."""
-      return self._reactants
+      return self.reactants
 
    @property
    def get_products(self):
       """Returns the products of the reaction."""
-      return self._products
+      return self.products
+
+   @property
+   def balanced(self):
+      """Returns the balanced reaction."""
+      return self._balanced
 
    def _balance(self):
       """Internal method, returns ordered dictionaries containing the balanced reaction's reactants and products."""
@@ -178,8 +216,6 @@ class Reaction(object):
                if count < len(e2):
                   tempstr += str("+ ")
 
-      # Original Code --> utils/past_code
-
       return tempstr
 
    def get_coefficient_sum(self):
@@ -189,7 +225,6 @@ class Reaction(object):
          self.coefficient_sum += int(self._balanced[0][item])
       for item in self._balanced[1]:
          self.coefficient_sum += int(self._balanced[1][item])
-
       return self.coefficient_sum
 
    def get_limiting_reactant(self, lim_calc = False):
