@@ -1,6 +1,5 @@
 import inspect
 import logging
-import warnings
 import collections.abc
 import functools
 import pkg_resources
@@ -15,32 +14,41 @@ def ChemsolveDeprecationWarning(deprecated_object = None, future_version = curre
    Warning that a class or method will be removed in a future version.
    If a future version is not specified, then the current version is assumed.
    """
-   def outer_decorator(obj):
-      @functools.wraps(obj)
-      def inner_decorator(*args, **kwargs):
-         global warned
-         # Get the object name.
-         if deprecated_object:
-            deprecated_object_name = deprecated_object
-         if isinstance(obj, collections.abc.Callable):
-            deprecated_object_name = deprecated_object
-         elif isinstance(obj, object):
-            deprecated_object_name = obj.__class__.__name__
-         else:
-            raise TypeError("INTERNAL: Got unknown object of unknown type, something is broken.")
+   if future_version == 'bypass':
+      # The warning is being naturally raised, not decorated onto
+      # a specific function or class. So, just simply raise it.
+      global warned
+      if deprecated_object not in warned:
+         logging.warning(deprecated_object)
+         warned.append(deprecated_object)
+   else:
+      # Otherwise, we need to use this method as a decorator.
+      def outer_decorator(obj):
+         @functools.wraps(obj)
+         def inner_decorator(*args, **kwargs):
+            global warned
+            # Get the object name.
+            if deprecated_object:
+               deprecated_object_name = deprecated_object
+            if isinstance(obj, collections.abc.Callable):
+               deprecated_object_name = deprecated_object
+            elif isinstance(obj, object):
+               deprecated_object_name = obj.__class__.__name__
+            else:
+               raise TypeError("INTERNAL: Got unknown object of unknown type, something is broken.")
 
-         if deprecated_object_name not in warned:
-            logging.warning((f"The feature '{deprecated_object_name}' you are using will be removed "
-                             f"following v" + str(future_version) + "."))
+            if deprecated_object_name not in warned:
+               logging.warning((f"The feature '{deprecated_object_name}' you are using will be removed "
+                                f"following v" + str(future_version) + "."))
 
-            # Add to tracker.
-            warned.append(deprecated_object_name)
+               # Add to tracker.
+               warned.append(deprecated_object_name)
 
-         # Return general method.
-         if isinstance(obj, collections.abc.Callable):
-            return obj(*args, **kwargs)
-      return inner_decorator
-   return outer_decorator
+            # Return general method.
+            if isinstance(obj, collections.abc.Callable):
+               return obj(*args, **kwargs)
+         return inner_decorator
+      return outer_decorator
 
 def get_called_class(meth):
    """
