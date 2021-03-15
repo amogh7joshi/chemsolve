@@ -14,6 +14,7 @@ from chemsolve.compound import FormulaCompound
 from chemsolve.utils.combustion import determine_main_compound
 from chemsolve.utils.warnings import assert_presence
 from chemsolve.utils.warnings import ChemsolveDeprecationWarning
+from chemsolve.utils.errors import InvalidCompoundError
 
 __all__ = ['Reaction', 'CombustionTrain']
 
@@ -166,6 +167,64 @@ class Reaction(object):
       """A transitional method for v2.0.0, will eventually replace fromCombustion."""
       return Reaction.fromCombustion(*args, hydrocarbon = hydrocarbon, othercompound = othercompound,
                                      sample_mass = sample_mass, **kwargs)
+
+   @classmethod
+   def from_string(cls, reaction_string, lim_calc = False, **kwargs):
+      """Instantiates a reaction from a string containing the reaction.
+
+      Given a reaction string, e.g. 2H2 + O2 = 2H2O, this class method will
+      split the reaction into its relevant compounds and instantiate the
+      reaction as necessary.
+
+      This is merely a convenience method if it is easier to simply write a
+      string containing the reaction instead of using the traditional method.
+
+      Examples
+      --------
+      Instantiate the reaction between hydrogen and iodine.
+
+      >>> reaction = Reaction.from_string("H + I = HI")
+
+      Parameters
+      ----------
+      reaction_string: str
+         The string containing the reaction. Note that the reactant/product
+         delimiter should be one of: '->', '-->', or '=', and the individual
+         compound error should be one of: '+', '&'.
+      lim_calc: bool
+         The same as the regular instantiation of a reaction class, if True then
+         the class will calculate the reaction's limiting reactant.
+
+      Returns
+      -------
+      An instantiated reaction class.
+      """
+      # Create holder lists for reactants and products.
+      reactants = []
+      products = []
+      holder = reactants
+
+      # Get each of the compounds/delimiters and parse the reaction.
+      values = reaction_string.split(" ")
+      for value in values:
+         try:
+            holder.append(Compound(value))
+         except InvalidCompoundError:
+            if value not in ['+', '&', '->', '-->', '=']:
+               # Check for general errors and raise them.
+               raise ValueError(f"Received an invalid delimiter: '{value}'.")
+            else: # Otherwise, check for specific cases.
+               if value in ['+', '&']:
+                  # We have received a compound delimiter, just continue.
+                  continue
+               else:
+                  # We have received a reactant/product delimiter, so
+                  # switch the list from reactants to products.
+                  holder = products
+
+      # Instantiate the class.
+      return cls(reactants = reactants, products = products,
+                 lim_calc = lim_calc, **kwargs)
 
    @property
    def get_reactants(self):
