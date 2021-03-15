@@ -71,3 +71,7 @@ TEMP_UNITS = [
    "c",
    "k"
 ]
+
+# Element/Compound Lists.
+STRONG_ACIDS = ['HCl', 'HNO3', 'H2SO4', 'HBr', 'HI', 'HClO4', 'HClO3']
+STRONG_BASES = ['LiOH', 'NaOH', 'KOH', 'RbOH', 'CsOH', 'Ca(OH)2', 'Sr(OH)2', 'Ba(OH)2']

@@ -32,9 +32,15 @@ from .utils.errors import (
 # TO BE ADDED IN THE NEAR FUTURE
 # from .quantum.photoelectric import energy_change, level_transition
 
-# High-level methods.
+# TOP-LEVEL METHODS FOR BASIC CHEMICAL INTERACTIONS (a lot of lists, essentially).
+
 def list_valid_elements():
-   """Creates a list of valid elements."""
+   """Creates a list of valid elements.
+
+   Returns
+   -------
+   A list of every valid element from the Periodic Table.
+   """
    elements = []
 
    from .utils.periodictable import PeriodicTable as _PeriodicTable
@@ -44,3 +50,42 @@ def list_valid_elements():
       elements.append(_element)
 
    print(elements)
+
+def list_strong_acids(return_compounds = False):
+   """Creates a list of strong acids.
+
+   Parameters
+   ----------
+   return_compounds: bool
+      If set to true, then this method will return a list of
+      `chemsolve.Compound` objects containing the strong acids.
+
+   Returns
+   -------
+   A list of each of the valid strong acids.
+   """
+   from .utils.constants import STRONG_ACIDS as _STRONG_ACIDS
+   if return_compounds:
+      return [Compound(strong_acid) for strong_acid in _STRONG_ACIDS]
+   else:
+      return _STRONG_ACIDS
+
+def list_strong_bases(return_compounds = False):
+   """Creates a list of strong bases.
+
+   Parameters
+   ----------
+   return_compounds: bool
+      If set to true, then this method will return a list of
+      `chemsolve.Compound` objects containing the strong bases.
+
+   Returns
+   -------
+   A list of each of the valid strong bases.
+   """
+   from .utils.constants import STRONG_BASES as _STRONG_BASES
+   if return_compounds:
+      return [Compound(strong_base) for strong_base in _STRONG_BASES]
+   else:
+      return _STRONG_BASES
+
