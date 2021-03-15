@@ -2,6 +2,7 @@ import operator
 import re
 import sys
 import sympy
+import pyparsing
 
 from chempy import Substance
 from chempy import balance_stoichiometry
@@ -15,6 +16,7 @@ from chemsolve.utils.from_formula import determine_empirical_coef
 from chemsolve.utils.from_formula import determine_empirical, determine_molecular
 from chemsolve.utils.constants import *
 from chemsolve.utils.warnings import ChemsolveDeprecationWarning
+from chemsolve.utils.errors import InvalidCompoundError
 
 __all__ = ['Compound', 'FormulaCompound', 'CarbonDioxide', 'Water']
 
@@ -33,11 +35,16 @@ class Compound(object):
          self.compound = mol_comp[0]
          self.empirical = mol_comp[1]
       else:
-         try:
+         try: # Check if a valid element has been passed.
             self.compound = pt.formula(compound)
+         except pyparsing.ParseException:
+            # Pass a chemistry-related error rather than a parsing error.
+            raise InvalidCompoundError(compound)
          except Exception as e:
+            # An unknown exception.
             raise e
 
+      # Set class values.
       self.mass = self.get_mass()
       self.compound_elements_list = self._get_compound_ions(compound)
       self.compound_elements = {}
@@ -413,17 +420,17 @@ class FormulaCompound(Compound):
       return form
 
 class CarbonDioxide(Compound):
-   '''
+   """
    An extension of the Compound class for Carbon Dioxide, to be used in the CombustionTrain class.
-   '''
+   """
    def __init__(self, **kwargs):
       super().__init__(compound = "CO2", **kwargs)
       self.geometry = "linear"
 
 class Water(Compound):
-   '''
+   """
    An extension of the Compound class for Water, to be used in the CombustionTrain class/
-   '''
+   """
    def __init__(self, **kwargs):
       super().__init__(compound = "H2O", **kwargs)
       self.geometry = "bent"
