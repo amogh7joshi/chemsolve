@@ -6,3 +6,4 @@ periodictable
 sphinx
 ipykernel
 nbsphinx
+pyparsing
