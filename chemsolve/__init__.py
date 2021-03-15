@@ -24,6 +24,11 @@ from .solutions.molar import molarity
 
 from .utils.constants import *
 
+# Import all of the different errors to the top-level API.
+from .utils.errors import (
+   ChemsolveError, InvalidElementError
+)
+
 # TO BE ADDED IN THE NEAR FUTURE
 # from .quantum.photoelectric import energy_change, level_transition
 
