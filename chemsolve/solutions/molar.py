@@ -44,11 +44,4 @@ def molarity(compound, setting = None, moles = None, volume = None):
    else:
       return None
 
-def base_molality(solute, solvent):
-   """
-   For the most basic calculations involving molality --> takes in just the moles of solute and mass of solvent.
-   """
-   return operator.__truediv__(solute, solvent)
-
-
 
