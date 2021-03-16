@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding = utf-8 -*-
 from chemsolve.element import Element
+from chemsolve.utils.validation import maybe_elements
 from chemsolve.utils.errors import InvalidElementError
 
 def rank_electronegativity(*elements):
@@ -21,9 +22,7 @@ def rank_electronegativity(*elements):
    The elements ranked from least to greatest electronegativity.
    """
    # First, validate the provided elements.
-   for element in elements:
-      if not isinstance(element, Element):
-         raise InvalidElementError(element, property_type = "type")
+   elements = maybe_elements(*elements)
 
    # Then, get the electronegativities of each element.
    electronegativities = []
@@ -54,9 +53,7 @@ def rank_atomic_radius(*elements):
    The elements ranked from least to greatest atomic radius.
    """
    # First, validate the provided elements.
-   for element in elements:
-      if not isinstance(element, Element):
-         raise InvalidElementError(element, property_type = "type")
+   elements = maybe_elements(*elements)
 
    # Then, get the atomic radii of each element.
    atomic_radii = []
@@ -79,7 +76,7 @@ def rank_first_ionization_energy(*elements):
 
    Parameters
    ----------
-   elements: chemsolve.Element
+   elements: chemsolve.Element or str
       A list of `chemsolve.Element` objects.
 
    Returns
@@ -87,9 +84,7 @@ def rank_first_ionization_energy(*elements):
    The elements ranked from least to greatest first ionization energy.
    """
    # First, validate the provided elements.
-   for element in elements:
-      if not isinstance(element, Element):
-         raise InvalidElementError(element, property_type = "type")
+   elements = maybe_elements(*elements)
 
    # Then, get the first ionization energy of each element.
    ionization_energies = []
@@ -120,9 +115,7 @@ def rank_electron_affinity(*elements):
    The elements ranked from least to greatest electron affinity.
    """
    # First, validate the provided elements.
-   for element in elements:
-      if not isinstance(element, Element):
-         raise InvalidElementError(element, property_type = "type")
+   elements = maybe_elements(*elements)
 
    # Then, get the first ionization energy of each element.
    electron_affinities = []
