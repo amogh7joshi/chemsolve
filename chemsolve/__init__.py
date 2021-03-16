@@ -15,6 +15,10 @@ class DuplicateLog(object):
       self.messages.add(record.msg)
       return rv
 
+# Import package version and set it up.
+from ._release import __version__
+__version__ = '.'.join(str(item) for item in __version__)
+
 # Import general Chemsolve functionalities.
 from .element import *
 from .compound import *
