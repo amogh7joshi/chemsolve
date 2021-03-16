@@ -1,15 +1,30 @@
-from os import path
+#!/usr/bin/env python3
+# -*- coding = utf-8 -*-
+import os
 from setuptools import setup
 from setuptools import find_packages
 
-directory = path.abspath(path.dirname(__file__))
-with open(path.join(directory, 'README.md'), encoding = 'utf-8') as f:
+# Get the long README description.
+with open(os.path.join(
+         os.path.dirname(__file__), 'README.md'), encoding = 'utf-8') as f:
    long_description = f.read()
 
+# Get the version from the module.
+def configure_chemsolve_version():
+   """Configures the module version directly from the package."""
+   # Import the version.
+   # noinspection PyProtectedMember
+   from chemsolve._release import __version__
+
+   # Check for certain cases.
+   if len(__version__) == 4:
+      end_tag = __version__[3]
+      return ".".join(str(item) for item in __version__[:3]) + f"-{end_tag}"
+   return ".".join(str(item) for item in __version__)
 
 setup(
    name = 'chemsolve',
-   version = '1.7.0',
+   version = configure_chemsolve_version(),
    author = "Amogh Joshi",
    packages = find_packages(),
    author_email = "joshi.amoghn@gmail.com",
