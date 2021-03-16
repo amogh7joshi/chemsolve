@@ -6,6 +6,7 @@ class ChemsolveError(Exception):
    """Base class for all Chemsolve errors."""
    pass
 
+
 class InvalidChemistryArgumentError(ChemsolveError, ValueError):
    """Base class for all invalid argument errors."""
    def __init__(self, object_or_property,
@@ -35,15 +36,15 @@ class InvalidChemistryArgumentError(ChemsolveError, ValueError):
    def __reduce__(self):
       return self.__class__, self.object_or_property, self.property_type
 
+
 class InvalidElementError(InvalidChemistryArgumentError, ValueError):
    """Primary invalid element error.
 
    Raised when an invalid element or element property is received.
    """
-   def __init__(self, object_or_property,
-                property_type = None, chemical_type = "element"):
+   def __init__(self, object_or_property, property_type = None):
       super(InvalidElementError, self).__init__(
-         object_or_property, property_type, chemical_type)
+         object_or_property, property_type, "element")
 
 
 class InvalidCompoundError(InvalidChemistryArgumentError):
@@ -51,8 +52,17 @@ class InvalidCompoundError(InvalidChemistryArgumentError):
 
    Raised when an invalid compound or compound property is received.
    """
-   def __init__(self, object_or_property,
-                property_type = None, chemical_type = "compound"):
+   def __init__(self, object_or_property, property_type = None):
       super(InvalidCompoundError, self).__init__(
-         object_or_property, property_type, chemical_type)
+         object_or_property, property_type, "compound")
+
+
+class InvalidReactionError(InvalidChemistryArgumentError):
+   """Primary invalid reaction error.
+
+   Raised when an invalid reaction or reaction property is received.
+   """
+   def __init__(self, object_or_property, property_type = None):
+      super(InvalidReactionError, self).__init__(
+         object_or_property, property_type, "reaction")
 
