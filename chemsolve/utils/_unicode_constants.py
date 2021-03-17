@@ -43,3 +43,15 @@ def _create_superscript_mapping():
 
 # Initialize the superscript mapping.
 SUPERSCRIPT_CONVERSION = _create_superscript_mapping()
+
+# Create a method exclusively for mapping the plus/minus signs (charges).
+def _create_symbol_mapping():
+   """Convert unicode symbols to their superscript format."""
+   normal_items = ["+", "-"]
+   unicode_items = [chr(0x2070 + i) for i in range(10, 12)]
+
+   # Create a dict mapping the two.
+   return dict(zip(normal_items, unicode_items))
+
+# Initialize the symbol mapping.
+SYMBOL_CONVERSION = _create_symbol_mapping()
