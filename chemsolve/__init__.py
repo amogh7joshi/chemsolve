@@ -30,7 +30,8 @@ from .utils.constants import *
 
 # Import all of the different errors to the top-level API.
 from .utils.errors import (
-   ChemsolveError, InvalidElementError
+   ChemsolveError, InvalidChemistryArgumentError,
+   InvalidElementError, InvalidCompoundError, InvalidReactionError
 )
 
 # TO BE ADDED IN THE NEAR FUTURE
