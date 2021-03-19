@@ -2,7 +2,8 @@ import operator
 import re
 import sys
 import sympy
-from pprint import pprint
+
+import pyparsing
 
 from chempy import Substance
 from chempy import balance_stoichiometry
@@ -91,7 +92,7 @@ class Reaction(object):
    def __contains__(self, item):
       # Determine if a compound is in the reaction.
       if isinstance(item, Compound):
-         if item.__repr__() in self.reactants or item.__repr__() in self.products:
+         if repr(item) in self.reactants or repr(item) in self.products:
             return True
       elif isinstance(item, str):
          if item in self.reactants or item in self.products:
@@ -102,22 +103,22 @@ class Reaction(object):
       """Internal method to initialize the class reaction from inputs."""
       # Add reactants to list of reactants and original reaction string.
       for reactant in reactants:
-         self.original_reaction += str(reactant.__str__() + " ")
+         self.original_reaction += str(str(reactant) + " ")
          if reactant != reactants[-1]:
             self.original_reaction += str("+ ")
          self._reactant_store.append(reactant)
-         self.reactants.append(reactant.__repr__())
+         self.reactants.append(repr(reactant))
 
       # Add the arrow differentiating reactants and products (to the printed reaction).
       self.original_reaction += "--> "
 
       # Add products to list of products and original reaction string.
       for product in products:
-         self.original_reaction += str(product.__str__() + " ")
+         self.original_reaction += str(str(product) + " ")
          if product != products[-1]:
             self.original_reaction += str("+ ")
          self._product_store.append(product)
-         self.products.append(product.__repr__())
+         self.products.append(repr(product))
 
    @classmethod
    def fromCombustion(cls, *args, hydrocarbon = True, othercompound = False, sample_mass = 0.0, **kwargs):
@@ -144,7 +145,7 @@ class Reaction(object):
             raise exception
          else:
             product_store.append(compound)
-            products.append(compound.__repr__())
+            products.append(repr(product))
 
       # Calculate main reactant.
       main_reactant = None
@@ -246,8 +247,15 @@ class Reaction(object):
       return self._balanced
 
    def _balance(self):
-      """Internal method, returns ordered dictionaries containing the balanced reaction's reactants and products."""
-      return balance_stoichiometry({f for f in self.reactants}, {f for f in self.products})
+      """Internal method, returns ordered dictionaries containing
+      the balanced reaction's reactants and products."""
+      try:
+         return balance_stoichiometry({f for f in self.reactants}, {f for f in self.products})
+      except pyparsing.ParseException:
+         raise InvalidReactionError("Received an invalid reaction, there is a reactant "
+                                    "which does not appear on the products side, or a product"
+                                    "which does not appear on the reactants side.",
+                                    property_type = "bypass")
 
    def balanced_display(self):
       """Returns a displayable version of the balanced reaction."""
@@ -291,25 +299,34 @@ class Reaction(object):
       return self.coefficient_sum
 
    def get_limiting_reactant(self, lim_calc = False):
-      """Returns the limiting reactant of the chemical reaction. Uses the moles/grams values from the Compound objects."""
-      if lim_calc:
-         lim_reac = None
-         product = (next(iter((self._balanced[1]).items())))[1]
-         moles = 0
-         org_moles = 0
-
-         for item in list((self._balanced[0]).items()):
-            for com in self._reactant_store:
-               if Compound(item[0]).__str__() == com.__str__():
-                  moles = com.mole_amount
-                  org_moles = moles
-            moles *= operator.truediv(product, item[1])
-            if moles < sys.maxsize:
-               lim_reac = item[0]
-
-         return Compound(lim_reac, moles = org_moles)
-      else:
+      """Returns the limiting reactant of the chemical reaction.
+      Uses the moles/grams values from the Compound objects."""
+      if not lim_calc: # If we do not want to calculate the limiting reactant.
          return False
+
+      # Create the initial holder objects.
+      lim_reac = None
+      moles = 0
+      org_moles = 0
+
+      # Choose a product to test with.
+      product = (next(iter((self._balanced[1]).items())))[1]
+
+      # Iterate over the different reactants.
+      for item in list((self._balanced[0]).items()):
+         for com in self._reactant_store:
+            if str(Compound(item[0])) == str(com):
+               # Calculate the mole values.
+               moles = com.mole_amount
+               org_moles = moles
+
+         # Use stoichiometry to determine the mole values.
+         moles *= operator.truediv(product, item[1])
+         if moles < sys.maxsize:
+            lim_reac = item[0]
+
+      # Return a compound object made from the limiting reactant.
+      return Compound(lim_reac, moles = org_moles)
 
 @ChemsolveDeprecationWarning('CombustionTrain', future_version ='2.0.0')
 class CombustionTrain(Reaction):

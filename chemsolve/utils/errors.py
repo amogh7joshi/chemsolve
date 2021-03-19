@@ -25,6 +25,8 @@ class InvalidChemistryArgumentError(ChemsolveError, ValueError):
       if self.property_type == "type":
          raised_str += "object of type {0}, expected a{1} {2}.".format(
             type(self.object_or_property), self.plurals, self.chemical_type)
+      elif self.property_type == "bypass":
+         raised_str = self.object_or_property
       elif self.property_type is None:
          raised_str += "{0} name: {1}.".format(
             self.chemical_type, self.object_or_property)
