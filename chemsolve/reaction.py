@@ -14,7 +14,7 @@ from chemsolve.compound import FormulaCompound
 from chemsolve.utils.combustion import determine_main_compound
 from chemsolve.utils.warnings import assert_presence
 from chemsolve.utils.warnings import ChemsolveDeprecationWarning
-from chemsolve.utils.errors import InvalidCompoundError
+from chemsolve.utils.errors import InvalidCompoundError, InvalidReactionError
 
 __all__ = ['Reaction', 'CombustionTrain']
 
@@ -206,21 +206,25 @@ class Reaction(object):
 
       # Get each of the compounds/delimiters and parse the reaction.
       values = reaction_string.split(" ")
-      for value in values:
-         try:
-            holder.append(Compound(value))
-         except InvalidCompoundError:
-            if value not in ['+', '&', '->', '-->', '=']:
-               # Check for general errors and raise them.
-               raise ValueError(f"Received an invalid delimiter: '{value}'.")
-            else: # Otherwise, check for specific cases.
-               if value in ['+', '&']:
-                  # We have received a compound delimiter, just continue.
-                  continue
-               else:
-                  # We have received a reactant/product delimiter, so
-                  # switch the list from reactants to products.
-                  holder = products
+      try: # Wrap all of the errors in a try/except block to raise custom errors.
+         for value in values:
+            try:
+               holder.append(Compound(value))
+            except InvalidCompoundError:
+               if value not in ['+', '&', '->', '-->', '=']:
+                  # Check for general errors and raise them.
+                  raise ValueError(f"Received an invalid delimiter: '{value}'.")
+               else: # Otherwise, check for specific cases.
+                  if value in ['+', '&']:
+                     # We have received a compound delimiter, just continue.
+                     continue
+                  else:
+                     # We have received a reactant/product delimiter, so
+                     # switch the list from reactants to products.
+                     holder = products
+      except ValueError:
+         raise InvalidReactionError("Received an invalid reaction, see traceback "
+                                    "for the specific cause of the issue.")
 
       # Instantiate the class.
       return cls(reactants = reactants, products = products,
