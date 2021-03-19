@@ -5,7 +5,8 @@ import sympy
 import pyparsing
 
 from chempy import Substance
-from chempy import balance_stoichiometry
+
+import periodictable as pt
 
 from math import isclose
 from math import floor, ceil
@@ -21,13 +22,6 @@ from chemsolve.utils.errors import InvalidCompoundError
 __all__ = ['Compound', 'FormulaCompound', 'CarbonDioxide', 'Water']
 
 def split(string): return [char for char in string]
-
-try:
-   import periodictable as pt
-except ModuleNotFoundError:
-   print("The module periodictable has not been installed.")
-except ImportError:
-   print("The module periodictable could not be found (may have not been installed).")
 
 class Compound(object):
    def __init__(self, compound, mol_comp = None, *args, **kwargs):
@@ -60,7 +54,7 @@ class Compound(object):
       return str(self.print_compound.unicode_name)
 
    def __repr__(self):
-      return str(self.compound)
+      return str(self.print_compound)
 
    def __int__(self):
       return int(self.mass)

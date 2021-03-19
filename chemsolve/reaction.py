@@ -15,7 +15,9 @@ from chemsolve.compound import FormulaCompound
 from chemsolve.utils.combustion import determine_main_compound
 from chemsolve.utils.warnings import assert_presence
 from chemsolve.utils.warnings import ChemsolveDeprecationWarning
-from chemsolve.utils.errors import InvalidCompoundError, InvalidReactionError
+from chemsolve.utils.errors import (
+   InvalidElementError, InvalidCompoundError, InvalidReactionError
+)
 
 __all__ = ['Reaction', 'CombustionTrain']
 
@@ -145,7 +147,7 @@ class Reaction(object):
             raise exception
          else:
             product_store.append(compound)
-            products.append(repr(product))
+            products.append(repr(compound))
 
       # Calculate main reactant.
       main_reactant = None
