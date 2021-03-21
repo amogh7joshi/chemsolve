@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding = utf-8 -*-
-from chemsolve.element import Element
 
 class ChemsolveError(Exception):
    """Base class for all Chemsolve errors."""
