@@ -7,6 +7,7 @@ import operator
 from chemsolve.utils.periodictable import PeriodicTable
 from chemsolve.utils.warnings import ChemsolveDeprecationWarning
 from chemsolve.utils.constants import *
+from chemsolve.utils.errors import InvalidElementError
 
 __all__ = ['Element', 'SpecialElement']
 
@@ -110,6 +111,58 @@ class Element(object):
       # For __repr__, we only need the element symbol, since that will be the
       # only thing used in internal methods (the intention of __repr__).
       return str(self.element_symbol.title())
+
+   def __gt__(self, other):
+      # Compare two elements' molar masses.
+      if isinstance(other, Element):
+         return self.mass > other.mass
+      elif isinstance(other, str):
+         try:
+            return self.mass > Element(other).mass
+         except InvalidElementError:
+            raise InvalidElementError(other)
+      else:
+         raise ValueError(f"Expected either an `Element` or a "
+                          f"`str`, got {type(other)}: {other}")
+
+   def __lt__(self, other):
+      # Compare two elements' molar masses.
+      if isinstance(other, Element):
+         return self.mass < other.mass
+      elif isinstance(other, str):
+         try:
+            return self.mass < Element(other).mass
+         except InvalidElementError:
+            raise InvalidElementError(other)
+      else:
+         raise ValueError(f"Expected either an `Element` or a "
+                          f"`str`, got {type(other)}: {other}")
+
+   def __ge__(self, other):
+      # Compare two elements' molar masses.
+      if isinstance(other, Element):
+         return self.mass >= other.mass
+      elif isinstance(other, str):
+         try:
+            return self.mass >= Element(other).mass
+         except InvalidElementError:
+            raise InvalidElementError(other)
+      else:
+         raise ValueError(f"Expected either an `Element` or a "
+                          f"`str`, got {type(other)}: {other}")
+
+   def __le__(self, other):
+      # Compare two Elements' molar masses.
+      if isinstance(other, Element):
+         return self.mass <= other.mass
+      elif isinstance(other, str):
+         try:
+            return self.mass <= Element(other).mass
+         except InvalidElementError:
+            raise InvalidElementError(other)
+      else:
+         raise ValueError(f"Expected either an `Element` or a "
+                          f"`str`, got {type(other)}: {other}")
 
    def __call__(self, **kwargs):
       # Update the class calculation quantities for more calculations.
