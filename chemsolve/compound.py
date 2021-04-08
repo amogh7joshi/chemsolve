@@ -66,6 +66,13 @@ class Compound(object):
       if item not in ["mole_amount", "gram_amount", "volume"]:
          raise AttributeError("The attribute " + str(item) + " does not exist within this class.")
 
+   def __getattribute__(self, item):
+      if item == 'print_compound':
+         ChemsolveDeprecationWarning('The attribute `Compound.print_compound` is deprecated and will '
+                                     'be removed in v2.0.0. Use repr(Compound) instead.',
+                                     future_version = 'bypass')
+      return object.__getattribute__(self, item)
+
    def __contains__(self, item):
       # Determine whether a element is in the compound.
       if isinstance(item, Element):
@@ -196,9 +203,7 @@ class Compound(object):
       return re.findall('[A-Z][^A-Z]*', str(compound))
 
    def get_elements_in_compound(self):
-      '''
-      Returns a dictionary containing the elements in the compound and the quantity of each element.
-      '''
+      """Returns a dictionary containing the elements in the compound and the quantity of each element."""
       for item in self.compound_elements_list:
          item_val = split(item)
          if item_val[-1].isdigit():
@@ -212,9 +217,7 @@ class Compound(object):
       return self.compound_elements
 
    def moles_in_compound(self, element):
-      '''
-      Returns the number of moles of a certain element within one mole of the compound.
-      '''
+      """Returns the number of moles of a certain element within one mole of the compound."""
       try:
          return self.compound_elements[element]
       except KeyError:
@@ -223,9 +226,7 @@ class Compound(object):
          print("That is not an element.")
 
    def percent_in_compound(self, element):
-      '''
-      Returns the percentage of a certain element within the compound.
-      '''
+      """Returns the percentage of a certain element within the compound."""
       try:
          return round(operator.truediv((Element(element.title()).mass * self.compound_elements[element]), self.mass), 4)
       except KeyError:
