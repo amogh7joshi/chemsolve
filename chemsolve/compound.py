@@ -26,7 +26,12 @@ def split(string): return [char for char in string]
 class Compound(object):
    def __init__(self, compound, mol_comp = None, *args, **kwargs):
       if mol_comp and compound is None:
-         self.compound = mol_comp[0]
+         # Initialize the formula object for later parameter parsing.
+         compound = mol_comp[0].replace("'", '')
+
+         # Set the original empirical calculation as well as the new
+         # molecular calculation to the class (for accessibility).
+         self.compound = pt.formula(compound)
          self.empirical = mol_comp[1]
       else:
          try: # Check if a valid element has been passed.
@@ -43,7 +48,7 @@ class Compound(object):
       self.compound_elements_list = self._get_compound_ions(compound)
       self.compound_elements = {}
       self.compound.elements = self.get_elements_in_compound()
-      self.print_compound = Substance.from_formula(compound)
+      self.print_compound = Substance.from_formula(compound) # Deprecated attribute.
       self.store_comp = compound
 
       if 'bypass' not in kwargs:
@@ -158,7 +163,8 @@ class Compound(object):
 
       # Create primary Compound class.
       if molecular:
-         molecular = determine_molecular(empirical_mass, compound_elements, molar_mass, empirical_coef, molecular=True)
+         molecular = determine_molecular(empirical_mass, compound_elements,
+                                         empirical_coef, molar_mass, molecular=True)
          return cls(compound = None, mol_comp = [molecular.__repr__(), empirical], grams = molar_mass)
       else:
          return cls(compound = empirical.__repr__())
