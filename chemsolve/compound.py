@@ -10,9 +10,9 @@ import periodictable as pt
 from chempy import Substance
 
 from chemsolve.element import Element
-from chemsolve.element import SpecialElement
 from chemsolve.utils.from_formula import determine_empirical_coef
 from chemsolve.utils.from_formula import determine_empirical, determine_molecular
+from chemsolve.utils.parsing import convert_string_no_charge
 from chemsolve.utils.constants import *
 from chemsolve.utils.warnings import ChemsolveDeprecationWarning
 from chemsolve.utils.errors import InvalidCompoundError
@@ -112,7 +112,7 @@ class Compound(object):
 
    def __str__(self):
       # Return the unicode name of the compound (rendered correctly).
-      return str(Substance.from_formula(str(self.compound)).unicode_name)
+      return convert_string_no_charge(str(self.compound))
 
    def __repr__(self):
       # Return just the regular string representing the class compound.
@@ -190,7 +190,8 @@ class Compound(object):
       compound_elements = []
 
       if len(args) < 2:
-         raise ValueError("You may be using the wrong method, as fromFormula is used to determine compound formulas.")
+         raise ValueError("You may be using the wrong method, as fromFormula "
+                          "is used to determine compound formulas.")
       for element in args:
          if not isinstance(element, Element):
             raise TypeError("The arguments of this class should only be Element classes.")
