@@ -1,15 +1,13 @@
-import operator
+#!/usr/bin/env python3
+# -*- coding = utf-8 -*-
 import re
 import sys
-import sympy
+import math
+import operator
 import pyparsing
 
-from chempy import Substance
-
 import periodictable as pt
-
-from math import isclose
-from math import floor, ceil
+from chempy import Substance
 
 from chemsolve.element import Element
 from chemsolve.element import SpecialElement
@@ -21,11 +19,68 @@ from chemsolve.utils.errors import InvalidCompoundError
 
 __all__ = ['Compound', 'FormulaCompound', 'CarbonDioxide', 'Water']
 
+# Since the `chemsolve.utils.string_op` file contains an import
+# of this actual `chemsolve.compound` file, we cannot directly
+# import the method from there due to circular imports. Instead,
+# the function is redefined here to enable its usage in this module.
 def split(string): return [char for char in string]
 
 class Compound(object):
-   def __init__(self, compound, mol_comp = None, *args, **kwargs):
-      if mol_comp and compound is None:
+   """The core compound object class.
+
+   This class contains a single compound, with its attributes being
+   different properties of the compound, including the simple ones like
+   mass and formula but also the more complex ones like dictionaries of
+   each of the elements which are part of the compound. Furthermore, the
+   class can calculate various values such as the number of moles or the
+   percentage of a certain element in the compound.
+
+   The compound should be instantiated traditionally, from its formula,
+   but it can also be created from its name (at least for the majority of
+   the main understandable compounds) if necessary.
+
+   Furthermore, with provided amounts of grams, moles, or molecules, the
+   compound class can automatically calculate the second and third unknown
+   quantities, such as molecules and moles from grams.
+   
+   Methods
+   ----------
+   `Compound.from_formula`:
+      A special method that allows the instantiation of the Compound class
+      from quantities of the elements which are part of it, and allows
+      for either the traditional empirical formula calculates or the 
+      providing of a molecular mass to calculate the molecular formula.
+                        
+   Examples
+   --------
+   Create a Ethane element.
+
+   >>> ethane = Compound('C2H6')
+   >>> # Access the element's attributes.
+   >>> print(ethane.mass)
+   >>> print(ethane.compound_elements)
+
+   Create a Sodium Hydroxide element and calculate the number of moles.
+
+   >>> naoh = Compound('NaOH', grams = 2.0)
+   >>> # Get the number of molecules and moles.
+   >>> print(naoh.mole_amount)
+   >>> print(naoh.molecules)
+
+   Parameters
+   ----------
+   compound: str
+      The chemical formula of the compound that you want to use.
+   """
+   def __init__(self, compound, **kwargs):
+      # The Compound class will either be instantiated as a regular
+      # compound, or from the `Compound.from_formula` method, and 
+      # may potentially have a keyword to calculate the molecular 
+      # formula, so that needs to be searched for first.
+      if 'mol_comp' in kwargs and compound is None:
+         # Extract the option from the kwarg dictionary.
+         mol_comp = kwargs['mol_comp']
+         
          # Initialize the formula object for later parameter parsing.
          compound = mol_comp[0].replace("'", '')
 
@@ -43,7 +98,7 @@ class Compound(object):
             # An unknown exception.
             raise e
 
-      # Set class values.
+      # Set the different class values.
       self.mass = self.get_mass()
       self.compound_elements_list = self._get_compound_ions(compound)
       self.compound_elements = {}
@@ -53,18 +108,22 @@ class Compound(object):
 
       if 'bypass' not in kwargs:
          # If a subclass is initialized, then don't set default values.
-         self._parse_kwargs(kwargs)
+         self._parse_quantities(**kwargs)
 
    def __str__(self):
-      return str(self.print_compound.unicode_name)
+      # Return the unicode name of the compound (rendered correctly).
+      return str(Substance.from_formula(str(self.compound)).unicode_name)
 
    def __repr__(self):
-      return str(self.print_compound)
+      # Return just the regular string representing the class compound.
+      return str(self.compound)
 
    def __int__(self):
+      # Return the mass of the compound as an integer.
       return int(self.mass)
 
    def __float__(self):
+      # Return the mass of the compound as a float.
       return self.mass
 
    def __getattr__(self, item):
@@ -72,6 +131,7 @@ class Compound(object):
          raise AttributeError("The attribute " + str(item) + " does not exist within this class.")
 
    def __getattribute__(self, item):
+      # Check for deprecated methods and warn about their removal.
       if item == 'print_compound':
          ChemsolveDeprecationWarning('The attribute `Compound.print_compound` is deprecated and will '
                                      'be removed in v2.0.0. Use repr(Compound) instead.',
@@ -89,27 +149,11 @@ class Compound(object):
       return False
 
    def __call__(self, **kwargs):
-      if "moles" in kwargs:
-         self.mole_amount = kwargs["moles"]
-         self.gram_amount = round(operator.mul(self.mole_amount, self.mass), 4)
-         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
+      # Update the class quantities of moles, grams, or molecules.
+      self._parse_quantities(**kwargs)
 
-      if "grams" in kwargs:
-         self.gram_amount = kwargs["grams"]
-         self.mole_amount = round(operator.truediv(self.gram_amount, self.mass), 4)
-         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
-
-      if "molecules" in kwargs:
-         self.molecules = kwargs["molecules"]
-         self.mole_amount = round(operator.__truediv__(self.molecules, AVOGADRO), 4)
-         self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
-
-      if "moles" in kwargs and "grams" in kwargs:
-         raise ValueError("You cannot provide both the number of moles and grams of the element at a single time.")
-      if "grams" in kwargs and "molecules" in kwargs:
-         raise ValueError("You cannot provide both the molecule and the gram value at the same time.")
-
-   def _parse_kwargs(self, kwargs):
+   def _parse_quantities(self, **kwargs):
+      # Parse the keyword arguments of the class.
       if "moles" in kwargs:
          self.mole_amount = kwargs["moles"]
          self.gram_amount = round(operator.mul(self.mole_amount, self.mass), 4)
@@ -165,7 +209,7 @@ class Compound(object):
       if molecular:
          molecular = determine_molecular(empirical_mass, compound_elements,
                                          empirical_coef, molar_mass, molecular=True)
-         return cls(compound = None, mol_comp = [molecular.__repr__(), empirical], grams = molar_mass)
+         return cls(compound = None, mol_comp = [molecular.__repr__(), empirical], grams = molar_mass) # noqa
       else:
          return cls(compound = empirical.__repr__())
 
@@ -178,16 +222,19 @@ class Compound(object):
       '''
       Returns the atomic (and therefore molar) mass of the compound.
       '''
-      return self.compound.mass
+      return self.compound.mass # noqa
 
    @staticmethod
    def _get_compound_ions(compound):
-      '''
-      Returns each of the individual polyatomic ions in the element (both element symbol and number).
-      '''
-      if "(" in compound: # Parse compound if it contains an item in parenthesis
+      """Returns each of the individual polyatomic ions in
+      the element (both element symbol and number)."""
+      # Start by checking whether there is a parenthesis in the compound.
+      if "(" in compound:
+         # Ensure that there is an end parenthesis or else the parser will break.
          if ")" not in compound:
             raise TypeError("That is not a valid format for a compound.")
+
+         # Parse all of the information inside of the actual parenthesis.
          left = compound.index("(")
          right = compound.index(")")
          charge = int(compound[right + 1])
@@ -204,8 +251,10 @@ class Compound(object):
                val += str(charge)
             replacer += val
 
+         # Re-create the compound with the parenthesis information resolved.
          compound = compound[:left] + str(replacer)
 
+      # Return the parsed compound.
       return re.findall('[A-Z][^A-Z]*', str(compound))
 
    def get_elements_in_compound(self):
@@ -223,7 +272,24 @@ class Compound(object):
       return self.compound_elements
 
    def moles_in_compound(self, element):
-      """Returns the number of moles of a certain element within one mole of the compound."""
+      """Returns the number of moles of a certain element
+      inside of the compound.
+
+      Finds the number of moles of a certain element per one mole of the
+      compound, and returns that value.
+
+      Examples
+      --------
+      Find the number of moles of hydrogen in water.
+
+      >>> water = Compound('H2O')
+      >>> print(water.moles_in_compound('H'))
+
+      Parameters
+      ----------
+      element: str or Element
+         The element that you want to find the quantity of.
+      """
       try:
          return self.compound_elements[element]
       except KeyError:
@@ -232,9 +298,26 @@ class Compound(object):
          print("That is not an element.")
 
    def percent_in_compound(self, element):
-      """Returns the percentage of a certain element within the compound."""
+      """Returns the percentage of a certain element inside of the compound.
+
+      Finds the percentage of the compound's mass that is made up of
+      a certain provided element and returns that value.
+
+      Examples
+      --------
+      Find the quantity of hydrogen in water.
+
+      >>> water = Compound('H2O')
+      >>> print(water.percent_in_compound('H'))
+
+      Parameters
+      ----------
+      element: str or Element
+         The element that you want to find the quantity of.
+      """
       try:
-         return round(operator.truediv((Element(element.title()).mass * self.compound_elements[element]), self.mass), 4)
+         return round((Element(str(element).title()).mass *
+                       self.compound_elements[element]) / self.mass, 4)
       except KeyError:
          print("That is not an element in this compound.")
       except AttributeError:
@@ -339,7 +422,7 @@ class FormulaCompound(Compound):
       solved = True
       for item in coef_list:
          t = round(operator.truediv(item, least), 2)
-         if not isclose(t, floor(t), abs_tol = 10 ** -1) and not isclose(t, ceil(t), abs_tol= 10 ** -1):
+         if not math.isclose(t, math.floor(t), abs_tol = 10 ** -1) and not math.isclose(t, math.ceil(t), abs_tol= 10 ** -1):
             solved = False
             coef_list_2.append(t)
          else:
@@ -353,7 +436,7 @@ class FormulaCompound(Compound):
          overall_solved = False
          if solved == False:
             for item in coef_list_3:
-               if not isclose(item, floor(item), abs_tol=10 ** -1) and not isclose(item, ceil(item), abs_tol=10 ** -1):
+               if not math.isclose(item, math.floor(item), abs_tol=10 ** -1) and not math.isclose(item, math.ceil(item), abs_tol=10 ** -1):
                   z = True
                   while z == True:
                      if round(operator.mul(item, factor), 1).is_integer():
@@ -365,7 +448,7 @@ class FormulaCompound(Compound):
             coef_list_3 = coef_list_4.copy()
             coef_list_4 = []
             for t in coef_list_3:
-               if not isclose(t, floor(t), abs_tol=10 ** -1) and not isclose(t, ceil(t), abs_tol=10 ** -1):
+               if not math.isclose(t, math.floor(t), abs_tol=10 ** -1) and not math.isclose(t, math.ceil(t), abs_tol=10 ** -1):
                   solved = False
                else:
                   solved = True
