@@ -4,6 +4,11 @@
 This file contains a collection of unicode conversion constants.
 """
 
+class DefaultDictionary(dict):
+   """A special dictionary to return the default key if it is missing."""
+   def __missing__(self, key):
+      return key
+
 # Create a method to initialize subscript mappings.
 def _create_subscript_mapping():
    """Convert unicode digit characters to subscripts."""
@@ -11,8 +16,11 @@ def _create_subscript_mapping():
    normal_digits = [i for i in range(10)]
    subscript_digits = [chr(0x2080 + i) for i in range(10)]
 
+   # Convert the normal digits to strings.
+   normal_digits = [str(i) for i in normal_digits]
+
    # Create a dict mapping the two.
-   return dict(zip(normal_digits, subscript_digits))
+   return DefaultDictionary(zip(normal_digits, subscript_digits))
 
 # Initialize the subscript mapping.
 SUBSCRIPT_CONVERSION = _create_subscript_mapping()
@@ -38,8 +46,11 @@ def _create_superscript_mapping():
       [*all_other_normal_nums, *two_and_three, 1],
       unicode_superscripts)))
 
+   # Convert the normal digits to strings.
+   normal = [str(i) for i in normal]
+
    # Create a dict mapping the two.
-   return dict(zip(normal, unicode))
+   return DefaultDictionary(zip(normal, unicode))
 
 # Initialize the superscript mapping.
 SUPERSCRIPT_CONVERSION = _create_superscript_mapping()
@@ -51,7 +62,7 @@ def _create_symbol_mapping():
    unicode_items = [chr(0x2070 + i) for i in range(10, 12)]
 
    # Create a dict mapping the two.
-   return dict(zip(normal_items, unicode_items))
+   return DefaultDictionary(zip(normal_items, unicode_items))
 
 # Initialize the symbol mapping.
 SYMBOL_CONVERSION = _create_symbol_mapping()
