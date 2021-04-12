@@ -27,6 +27,7 @@ from .reaction import *
 from .solutions.molar import molarity
 
 from .utils.constants import *
+from .utils.conversion import convert_pressure_units, convert_temperature_units
 
 # Import all of the different errors to the top-level API.
 from .utils.errors import (
