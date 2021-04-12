@@ -44,7 +44,7 @@ class Compound(object):
    quantities, such as molecules and moles from grams.
    
    Methods
-   ----------
+   -------
    `Compound.from_formula`:
       A special method that allows the instantiation of the Compound class
       from quantities of the elements which are part of it, and allows
@@ -265,9 +265,11 @@ class Compound(object):
          if item_val[-1].isdigit():
             if item_val[-2].isdigit():
                pass
-               self.compound_elements.update({''.join(item_val[:-2]): int(''.join(item_val[-2:]))})
+               self.compound_elements.update({''.join(item_val[:-2]):
+                                                 int(''.join(item_val[-2:]))})
             else:
-               self.compound_elements.update({''.join(item_val[:-1]): int(item_val[-1])})
+               self.compound_elements.update({''.join(item_val[:-1]):
+                                                 int(item_val[-1])})
          else:
             self.compound_elements.update({item: 1})
       return self.compound_elements
