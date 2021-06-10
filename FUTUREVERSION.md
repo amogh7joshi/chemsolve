@@ -31,6 +31,9 @@ with a `__new__` method to dispatch to a relevant class. Purposes:
     of the original `Compound` class, but allowing for easier method development for chemical methods involving acids/bases.
 - Move all of the actual library source code to a `chemsolve.source` directory with the main library code being exposed through an API, preventing
 runaway imports or access to internal methods which disrupt the library usage.
+- Internal changes for `__repr__` methods to return a more informative description for use in tracebacks. This is especially
+important due to the fact that currently, errors will simply print out the name of the element or compound, as opposed to the fact
+that the element or compound is an `Element` or `Compound` object.
 
 *Note: This is not a complete list of changes, additional changes will be added as seen fit. Furthermore, changes may be removed from 
 this list if they are determined to be not worth or not feasible to add.* 
