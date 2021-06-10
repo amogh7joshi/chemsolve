@@ -116,7 +116,8 @@ class Compound(object):
 
    def __repr__(self):
       # Return a object-based representation for internal use.
-      return f"<Compound ({self.compound})>"
+      # return f"<Compound ({self.compound})>"
+      return self.compound
 
    def __int__(self):
       # Return the mass of the compound as an integer.
