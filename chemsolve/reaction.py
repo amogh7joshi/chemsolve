@@ -46,7 +46,7 @@ class Reaction(object):
       self.lim_calc = lim_calc
       self.reactants = []
       self.products = []
-      self.original_reaction = ""
+      self._original_reaction = ""
       self._reactant_store = []
       self._product_store = []
       assert_presence(self._reactant_store, self._product_store)
@@ -61,14 +61,14 @@ class Reaction(object):
                                      future_version = 'bypass')
          for compound in args:
             if isinstance(compound, str):
-               self.original_reaction += str("--> ")
+               self._original_reaction += str("--> ")
                temp = self.products
                temp2 = self._product_store
             else:
                temp2.append(compound)
-               self.original_reaction += str(compound.__str__() + " ")
+               self._original_reaction += str(compound.__str__() + " ")
                if compound != args[-1] and not isinstance(args[args.index(compound) + 1], str):
-                  self.original_reaction += str("+ ")
+                  self._original_reaction += str("+ ")
                if not isinstance(compound, (Element, Compound)):
                   raise TypeError("The object " + str(compound) + " is not of type "
                                   "Compound or related subclasses, please redefine it.")
@@ -86,10 +86,7 @@ class Reaction(object):
          self.main_reactant = main_reactant
 
    def __str__(self):
-      return self.original_reaction
-
-   def __getattr__(self, item):
-      raise AttributeError("The attribute " + str(item) + " does not exist within the Reaction class.")
+      return self._balanced
 
    def __contains__(self, item):
       # Determine if a compound is in the reaction.
@@ -105,20 +102,20 @@ class Reaction(object):
       """Internal method to initialize the class reaction from inputs."""
       # Add reactants to list of reactants and original reaction string.
       for reactant in reactants:
-         self.original_reaction += str(str(reactant) + " ")
+         self._original_reaction += str(str(reactant) + " ")
          if reactant != reactants[-1]:
-            self.original_reaction += str("+ ")
+            self._original_reaction += str("+ ")
          self._reactant_store.append(reactant)
          self.reactants.append(repr(reactant))
 
       # Add the arrow differentiating reactants and products (to the printed reaction).
-      self.original_reaction += "--> "
+      self._original_reaction += "--> "
 
       # Add products to list of products and original reaction string.
       for product in products:
-         self.original_reaction += str(str(product) + " ")
+         self._original_reaction += str(str(product) + " ")
          if product != products[-1]:
-            self.original_reaction += str("+ ")
+            self._original_reaction += str("+ ")
          self._product_store.append(product)
          self.products.append(repr(product))
 
@@ -193,7 +190,7 @@ class Reaction(object):
       reaction_string: str
          The string containing the reaction. Note that the reactant/product
          delimiter should be one of: '->', '-->', or '=', and the individual
-         compound error should be one of: '+', '&'.
+         compound delimeter should be one of: '+', '&'.
       lim_calc: bool
          The same as the regular instantiation of a reaction class, if True then
          the class will calculate the reaction's limiting reactant.
