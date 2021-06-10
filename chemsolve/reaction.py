@@ -119,6 +119,11 @@ class Reaction(object):
          self._product_store.append(product)
          self.products.append(repr(product))
 
+   @property
+   def original_reaction(self):
+      # Return the original (non-balanced) reaction.
+      return self._original_reaction
+
    @classmethod
    def fromCombustion(cls, *args, hydrocarbon = True, othercompound = False, sample_mass = 0.0, **kwargs):
       """
