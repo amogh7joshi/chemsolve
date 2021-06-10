@@ -263,24 +263,24 @@ class Element(object):
       for indx, element in enumerate(table['Symbol']):
          if config == Element(table['Symbol'][indx]).full_electron_configuration:
             return cls(table['Symbol'][indx])
-      raise ValueError(f"Received invalid electron configuration {config}, not a valid noble gas "
-                       f"configuration or complete configuration on the periodic table.")
+      raise ValueError(
+         f"Received invalid electron configuration {config}, not a valid noble gas "
+         f"configuration or complete configuration on the periodic table.")
 
+   @ChemsolveDeprecationWarning('Element.get_element_name', future_version = '2.0.0')
    def get_element_name(self):
       """Returns the element name from the symbol."""
       try:
          return self._properties['Name']
-      except AttributeError as ae:
-         if ("+" or "-") in self.element_symbol:
-            raise AttributeError("That is not an existing element in the periodic table.")
-         else:
-            raise ae
+      except AttributeError:
+         raise InvalidElementError(
+            f"Invalid element {self.element_symbol} received.")
 
    def _get_full_electron_configuration(self):
       """Returns the entire electron configuration of the element."""
-      config = ""
       if self.electron_configuration[0] == "[":
-         config = Element(self.electron_configuration[1:3]).full_electron_configuration + " "
+         config = Element(self.electron_configuration[1:3])\
+                     .full_electron_configuration + " "
          config += self.electron_configuration[4:]
          return config
       else:
