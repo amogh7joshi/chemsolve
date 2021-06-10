@@ -108,9 +108,8 @@ class Element(object):
       return str(self.element_name.title())
 
    def __repr__(self):
-      # For __repr__, we only need the element symbol, since that will be the
-      # only thing used in internal methods (the intention of __repr__).
-      return str(self.element_symbol.title())
+      # Return a object-based representation for internal use.
+      return f"<Element ({str(self.element_symbol.title())}>"
 
    def __gt__(self, other):
       # Compare two elements' molar masses.

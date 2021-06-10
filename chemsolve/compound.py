@@ -115,8 +115,8 @@ class Compound(object):
       return convert_string_no_charge(str(self.compound))
 
    def __repr__(self):
-      # Return just the regular string representing the class compound.
-      return str(self.compound)
+      # Return a object-based representation for internal use.
+      return f"<Compound ({self.compound})>"
 
    def __int__(self):
       # Return the mass of the compound as an integer.
