@@ -5,6 +5,7 @@ import operator
 from chemsolve.utils.conversion import to_atm, to_kelvin
 from chemsolve.utils.string_op import num_in
 from chemsolve.utils.constants import *
+from chemsolve.utils.validation import resolve_float_or_constant
 
 class Gas(object):
    """A class representing an ideal gas.
@@ -48,7 +49,7 @@ class Gas(object):
             if attr:
                # If the attribute is pre-determined.
                m = list(k for k, v in locals().items() if v is attr and k != "attr")[0]
-               setattr(self, m, attr)
+               setattr(self, m, resolve_float_or_constant(attr))
             else:
                # If the attribute is the unknown.
                m = list(k for k, v in locals().items() if v is None and k != "attr")[0]
