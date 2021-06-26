@@ -64,3 +64,28 @@ def resolve_float_or_constant(input_value, accept_none = True):
          "expected either a constant or a number."
       )
 
+def assert_chemical_presence(initial, determiner):
+   """Determines if items are present in both provided lists.
+
+   This method, in essence, checks that each item in the
+   `initial` list is also present in the `determiner` list,
+   and raises an error if an item is in the `initial` list
+   but is not inside of the `determiner` list.
+
+   This means that an item can be present in `determiner`
+   but not `initial`, but it cannot be present in `initial`
+   but not `determiner`.
+
+   Traditionally, this is used to check that a reactant
+   is also present as a product in a chemical reaction.
+
+   Parameters
+   ----------
+   initial: list or set or tuple
+      The list containing the items which must be present in both.
+   determiner: list or set or tuple
+      The list to check `initial` against.
+   """
+   for item in initial:
+      if item not in determiner:
+         raise ValueError("A reactant must also be a product in a reaction.")

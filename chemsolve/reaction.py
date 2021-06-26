@@ -13,7 +13,7 @@ from chemsolve.element import SpecialElement
 from chemsolve.compound import Compound
 from chemsolve.compound import FormulaCompound
 from chemsolve.utils.combustion import determine_main_compound
-from chemsolve.utils.warnings import assert_presence
+from chemsolve.utils.validation import assert_chemical_presence
 from chemsolve.utils.warnings import ChemsolveDeprecationWarning
 from chemsolve.utils.errors import (
    InvalidElementError, InvalidCompoundError, InvalidReactionError
@@ -49,7 +49,7 @@ class Reaction(object):
       self._original_reaction = ""
       self._reactant_store = []
       self._product_store = []
-      assert_presence(self._reactant_store, self._product_store)
+      assert_chemical_presence(self._reactant_store, self._product_store)
 
       temp = self.reactants
       temp2 = self._reactant_store

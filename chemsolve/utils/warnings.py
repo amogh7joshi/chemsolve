@@ -1,71 +1,108 @@
+#!/usr/bin/env python3
+# -*- coding = utf-8 -*-
 import inspect
 import logging
-import collections.abc
 import functools
 import pkg_resources
+import collections.abc
 
-current_version = pkg_resources.get_distribution("chemsolve").version
+# Get the next major version.
+from .._release import __version__
+next_major_version = '.'.join((__version__[0] + 1, 0, 0))
 
 # Global value to determine if warning has already been displayed.
-warned = []
+_ISSUED_WARNINGS = []
 
-def ChemsolveDeprecationWarning(deprecated_object = None, future_version = current_version):
-   """
-   Warning that a class or method will be removed in a future version.
-   If a future version is not specified, then the current version is assumed.
+def ChemsolveDeprecationWarning(deprecated_object = None, future_version = next_major_version):
+   """Issues a warning for the deprecation of an object.
+
+   This method, which can be used either as a decorator
+   to methods/classes, or as a standalone method call
+   for parameters, issues a warning that said object will
+   be deprecated in a future version.
+
+   Traditionally, the deprecation warning will be issued
+   for the next major version, but when this is not the
+   case, the `future_version` parameter can be adjusted.
+
+   For situations where the method needs to be called
+   directly, such as a deprecated parameter of a class,
+   the `future_version` parameter can be set to 'bypass',
+   in which case `deprecated_object` will be a custom
+   deprecation message set during the method call.
+
+   Examples
+   --------
+   Deprecating a method for a future version is as simple
+   as using `ChemsolveDeprecationWarning` as a method.
+
+   >>> @ChemsolveDeprecationWarning(
+   ...   'chemsolve_method', future_version = '2.0.0')
+   ... def chemsolve_method(param):
+   ...   return param
+
+   For deprecating a class parameter, `ChemsolveDeprecationWarning`
+   should be used in the class's `__getattribute__` method.
+
+   >>> class ChemsolveClass:
+   ...   def __getattribute__(self, item):
+   ...      if item == "deprecated_parameter":
+   ...         ChemsolveDeprecationWarning(
+   ...            "The parameter `deprecated_parameter` is "
+   ...            "deprecated and will be removed following "
+   ...            "version X.", future_version = 'bypass')
+
+   Parameters
+   ----------
+   deprecated_object: str
+      Either a string representing the name of the
+      method/class which is decorated by this method,
+      or a complete deprecation message when using
+      the `bypass` mode.
+   future_version: str
+      A string representing the future version of the
+      library in which the deprecated object will be
+      removed, or the word `bypass` when deprecating
+      a parameter to pass a custom message.
    """
    if future_version == 'bypass':
       # The warning is being naturally raised, not decorated onto
       # a specific function or class. So, just simply raise it.
-      global warned
-      if deprecated_object not in warned:
+      global _ISSUED_WARNINGS
+      if deprecated_object not in _ISSUED_WARNINGS:
          logging.warning(deprecated_object)
-         warned.append(deprecated_object)
+         _ISSUED_WARNINGS.append(deprecated_object)
    else:
       # Otherwise, we need to use this method as a decorator.
       def outer_decorator(obj):
          @functools.wraps(obj)
          def inner_decorator(*args, **kwargs):
-            global warned
+            global _ISSUED_WARNINGS
             # Get the object name.
-            if deprecated_object:
-               deprecated_object_name = deprecated_object
             if isinstance(obj, collections.abc.Callable):
                deprecated_object_name = deprecated_object
-            elif isinstance(obj, object):
-               deprecated_object_name = obj.__class__.__name__
             else:
-               raise TypeError("INTERNAL: Got unknown object of unknown type, something is broken.")
+               deprecated_object_name = obj.__class__.__name__
 
-            if deprecated_object_name not in warned:
-               logging.warning((f"The feature '{deprecated_object_name}' you are using will be removed "
-                                f"following v" + str(future_version) + "."))
+            # If a deprecation warning has not already been issued
+            # for the object, then issue a new deprecation warning.
+            if deprecated_object_name not in _ISSUED_WARNINGS:
+               logging.warning(
+                  f"The feature '{deprecated_object_name}' you are using "
+                  f"will be removed following v" + str(future_version) + ".")
+               _ISSUED_WARNINGS.append(deprecated_object_name)
 
-               # Add to tracker.
-               warned.append(deprecated_object_name)
-
-            # Return general method.
+            # If the object is a callable, return its value.
             if isinstance(obj, collections.abc.Callable):
                return obj(*args, **kwargs)
          return inner_decorator
       return outer_decorator
 
 def get_called_class(meth):
-   """
-   Gets the class which the method was called from.
-   """
+   """Gets the class which the method was called from."""
    for cls in inspect.getmro(meth.im_class):
       if meth.__name__ in cls.__dict__:
          return cls
-
-def assert_presence(initial, determiner):
-   """
-   Determine if an item in one list is present in another list.
-   Used to confirm that a reactant is also present as a product.
-   """
-   for item in initial:
-      if item not in determiner:
-         raise ValueError("A reactant must also be a product in a reaction.")
 
 
 
