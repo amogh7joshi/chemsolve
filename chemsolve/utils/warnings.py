@@ -8,7 +8,7 @@ import collections.abc
 
 # Get the next major version.
 from .._release import __version__
-next_major_version = '.'.join((__version__[0] + 1, 0, 0))
+next_major_version = '.'.join(str(i) for i in (__version__[0] + 1, 0, 0))
 
 # Global value to determine if warning has already been displayed.
 _ISSUED_WARNINGS = []
