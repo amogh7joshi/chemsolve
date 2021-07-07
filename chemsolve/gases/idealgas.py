@@ -3,9 +3,9 @@
 import operator
 
 from chemsolve.utils.conversion import to_atm, to_kelvin
-from chemsolve.utils.string_op import num_in
 from chemsolve.utils.constants import *
 from chemsolve.utils.validation import resolve_float_or_constant
+from chemsolve.utils.validation import check_empty_values
 
 class Gas(object):
    """A class representing an ideal gas.
@@ -38,23 +38,20 @@ class Gas(object):
    T: float
       The value for temperature.
    """
+   @check_empty_values('P', 'V', 'n', 'T', allow = 3)
    def __init__(self, P: float = None, V: float = None,
                 n: float = None, T: float = None, **kwargs):
-      # Ensure that enough arguments have been passed.
-      if not num_in(3, [P, V, n, T]):
-         raise ValueError("You need to define three of the attributes of the gas.")
-      else:
-         # Otherwise, set the pre-determined class values to the class.
-         for attr in [P, V, n, T]:
-            if attr:
-               # If the attribute is pre-determined.
-               m = list(k for k, v in locals().items() if v is attr and k != "attr")[0]
-               setattr(self, m, resolve_float_or_constant(attr))
-            else:
-               # If the attribute is the unknown.
-               m = list(k for k, v in locals().items() if v is None and k != "attr")[0]
-               setattr(self, "unknown", m)
-               setattr(self, m, None)
+      # Otherwise, set the pre-determined class values to the class.
+      for attr in [P, V, n, T]:
+         if attr:
+            # If the attribute is pre-determined.
+            m = list(k for k, v in locals().items() if v is attr and k != "attr")[0]
+            setattr(self, m, resolve_float_or_constant(attr))
+         else:
+            # If the attribute is the unknown.
+            m = list(k for k, v in locals().items() if v is None and k != "attr")[0]
+            setattr(self, "unknown", m)
+            setattr(self, m, None)
 
       # Parse keyword arguments and set relevant conversions.
       if kwargs:

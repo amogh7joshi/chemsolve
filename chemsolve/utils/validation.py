@@ -1,10 +1,53 @@
 #!/usr/bin/env python3
 # -*- coding = utf-8 -*-
+import inspect
+import functools
+
 from chemsolve.element import Element
-from chemsolve.compound import Compound
 from chemsolve.utils.periodictable import PeriodicTable
 from chemsolve.utils.errors import InvalidElementError
 from chemsolve.utils import constants
+
+def check_empty_values(*params, allow = 1, maybe_less = False):
+   """A decorator to check the values passed as `None` to a method.
+
+   This decorator validates the parameters passed in `params`
+   that are in a function's input parameters, and ensures
+   that a specifically allowed number of them, `allow`, or
+   potentially less, are existent in the call arguments.
+
+   Parameters
+   ----------
+   params: str
+      - The parameters to check from the function's signature.
+   allow: int
+      - The number of parameters that should not be None.
+   maybe_less: bool
+      - Whether to allow less than or equal to the number of
+      parameters given in `allow`, or just equal to.
+   """
+   def outer_decorator(f):
+      @functools.wraps(f)
+      def inner_decorator(*args, **kwargs):
+         sig = inspect.getcallargs(f, *args, **kwargs)
+         track_none_values = 0
+         for param, value in sig.items():
+            if param in params:
+               if value is not None:
+                  track_none_values += 1
+         if track_none_values < allow and maybe_less: pass
+         elif track_none_values == allow: pass
+         else:
+            err_msg_value = f"{allow}" \
+               + (" or less" if maybe_less else "")
+            raise ValueError(
+               f"Received an invalid number of arguments, "
+               f"expected {err_msg_value}, "
+               f"got {track_none_values}.")
+         return f(*args, **kwargs)
+      return inner_decorator
+   return outer_decorator
+
 
 def is_valid_element(element):
    """Checks whether a provided object is a valid element."""
@@ -40,8 +83,7 @@ def maybe_elements(*elements):
    return converted_elements
 
 def resolve_float_or_constant(input_value, accept_none = True):
-   """Resolves an input as either a float/int object,
-   or a default chemistry-related constant."""
+   """Resolves an input as either a float or chemistry constant."""
    if input_value is None:
       if accept_none:
          return None
