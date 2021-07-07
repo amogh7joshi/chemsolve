@@ -12,7 +12,16 @@ class Wave(object):
    Calculate the frequency of an electromagnetic wave
    given its wavelength and speed.
 
-   # >>> wave = Wave(wavelength = 2e8, speed = 1)
+   >>> wave = Wave(wavelength = 2e8, speed = 1)
+
+   Parameters
+   ----------
+   frequency: int or float or str
+      - The frequency of the wave, either a float or string.
+   wavelength: int or float or str
+      - The wavelength of the wave, either a float or string.
+   speed: int or float or str
+      - The speed of the wave, either a float or string.
    """
    @check_empty_values('frequency', 'wavelength', 'speed', allow = 2)
    def __init__(self, frequency = None, wavelength = None, speed = None):
