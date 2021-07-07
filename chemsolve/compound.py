@@ -157,32 +157,40 @@ class Compound(object):
       # Parse the keyword arguments of the class.
       if "moles" in kwargs:
          self.mole_amount = kwargs["moles"]
-         self.gram_amount = round(operator.mul(self.mole_amount, self.mass), 4)
-         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
+         self.gram_amount = round(self.mole_amount * self.mass, 4)
+         self.molecules = round(self.mole_amount * AVOGADRO, 4)
 
       if "grams" in kwargs:
          self.gram_amount = kwargs["grams"]
-         self.mole_amount = round(operator.truediv(self.gram_amount, self.mass), 4)
-         self.molecules = round(operator.mul(self.mole_amount, AVOGADRO), 4)
+         self.mole_amount = round(self.gram_amount / self.mass, 4)
+         self.molecules = round(self.mole_amount * AVOGADRO, 4)
 
       if "molecules" in kwargs:
          self.molecules = kwargs["molecules"]
-         self.mole_amount = round(operator.__truediv__(self.molecules, AVOGADRO), 4)
-         self.gram_amount = round(operator.mul(self.mass, self.mole_amount))
+         self.mole_amount = round(self.molecules / AVOGADRO, 4)
+         self.gram_amount = round(self.mass * self.mole_amount)
 
       if "volume" in kwargs or "molarity" in kwargs:
-         raise AttributeError("If you want to use volume or molarity, then you need to use the SolutionCompound class.")
+         raise AttributeError(
+            "If you want to use volume or molarity, then you "
+            "need to use the SolutionCompound class.")
 
       if "moles" in kwargs and "grams" in kwargs:
-         raise ValueError("You cannot provide both the number of moles and grams of the element at a single time.")
+         raise ValueError(
+            "You cannot provide both the number of moles "
+            "and grams of the element at a single time.")
       if "grams" in kwargs and "volume" in kwargs:
-         raise ValueError("You cannot provide both the volume and the gram value at the same time.")
+         raise ValueError(
+            "You cannot provide both the volume and "
+            "the gram value at the same time.")
 
       if "structure" in kwargs:
          if kwargs["structure"] in STRUCTURES:
             self.structure = kwargs["structure"]
          else:
-            raise ValueError("That is not an appropriate compound structure.")
+            raise ValueError(
+               f"Received an inappropriate compound "
+               f"structure {kwargs['structure']}.")
 
    @classmethod
    def fromFormula(cls, *args, molecular = False, **kwargs):
@@ -234,7 +242,10 @@ class Compound(object):
       if "(" in compound:
          # Ensure that there is an end parenthesis or else the parser will break.
          if ")" not in compound:
-            raise TypeError("That is not a valid format for a compound.")
+            raise InvalidCompoundError(
+               "Received opening parenthesis but no closing parenthesis"
+               f"in compound {compound}.", property_type = 'bypass'
+            )
 
          # Parse all of the information inside of the actual parenthesis.
          left = compound.index("(")
